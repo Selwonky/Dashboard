@@ -1,0 +1,57 @@
+import { Link } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { PageHeader, Section } from "@/components/commons/primitives";
+import { StatusBadge } from "@/components/commons/StatusBadge";
+import {
+  actionStatusKind, actionStatusLabel, deptLabel, statusVariant,
+  type ActionStatus,
+} from "@/lib/commons/prototype-data";
+import { useCommons } from "@/lib/commons/store";
+
+const lifecycle: ActionStatus[] = [
+  "draft", "queued", "running", "needs_approval", "completed", "failed", "cancelled",
+];
+
+export function QueuePage() {
+  const { queue } = useCommons();
+  return (
+    <>
+      <PageHeader
+        title="Queue"
+        description="Work Jo from is preparing and running. Items needing approval surface in your Inbox."
+      />
+
+      <div className="mb-6 flex flex-wrap gap-2">
+        {lifecycle.map((s) => (
+          <Badge key={s} variant={statusVariant[actionStatusKind[s]]}>
+            {actionStatusLabel[s]} · {queue.filter((q) => q.status === s).length}
+          </Badge>
+        ))}
+      </div>
+
+      {(["needs_approval", "running", "queued", "completed", "failed"] as ActionStatus[]).map((status) => {
+        const items = queue.filter((q) => q.status === status);
+        if (!items.length) return null;
+        return (
+          <Section key={status} title={actionStatusLabel[status]}>
+            <Card className="gap-0 py-0">
+              {items.map((a, i) => (
+                <div key={a.id} className={`flex items-center gap-3 px-5 py-3.5 ${i > 0 ? "border-t" : ""}`}>
+                  <StatusBadge kind={actionStatusKind[a.status]} label={actionStatusLabel[a.status]} />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{a.title}</p>
+                    <p className="text-xs text-muted-foreground">{deptLabel(a.department)} · {a.updatedAt}</p>
+                  </div>
+                  {a.status === "needs_approval" && (
+                    <Link to="/commons/inbox" className="shrink-0 text-sm font-medium text-primary hover:underline">Review →</Link>
+                  )}
+                </div>
+              ))}
+            </Card>
+          </Section>
+        );
+      })}
+    </>
+  );
+}
