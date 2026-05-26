@@ -466,10 +466,30 @@ html {
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* Sidebar = a darker shade of the lavender canvas (not a separate colour). */
+  --sidebar: #ece7f3;                      /* darker lavender than --background */
+  --sidebar-foreground: var(--foreground); /* dark text, same family as main */
+  --sidebar-accent: #ddd5ec;               /* active item — one step darker */
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: #ddd6ea;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-ring: var(--primary);
 }
 
 .dark {
   --info: #38bdf8;        --info-foreground: #06121b;
   --warning: #fbbf24;     --warning-foreground: #1a1206;
   --success: #22c55e;     --success-foreground: #04210f;
+
+  /* Sidebar = a darker shade of the dark canvas (same hue, lower lightness). */
+  --sidebar: oklch(0.115 0.02 260);        /* darker than --background 0.145 */
+  --sidebar-foreground: oklch(0.92 0 0);
+  --sidebar-accent: oklch(1 0 0 / 8%);     /* active item — subtle lighten */
+  --sidebar-accent-foreground: oklch(0.96 0 0);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-ring: var(--primary);
 }
