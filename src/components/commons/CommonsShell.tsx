@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useCommons } from "@/lib/commons/store";
+import { objectById, departments } from "@/lib/commons/prototype-data";
 
 function Logo({ compact }: { compact?: boolean }) {
   return (
@@ -120,14 +121,21 @@ function TopBar({
         {collapsed ? <PanelLeft className="size-4" /> : <PanelLeftClose className="size-4" />}
       </Button>
       <nav aria-label="Breadcrumb" className="hidden items-center gap-1.5 text-sm text-muted-foreground sm:flex">
-        {parts.map((p, i) => (
-          <span key={i} className="flex items-center gap-1.5">
-            {i > 0 && <span className="text-muted-foreground/40">/</span>}
-            <span className={cn(i === parts.length - 1 && "font-medium text-foreground")}>
-              {crumbLabels[p] ?? p.charAt(0).toUpperCase() + p.slice(1)}
+        {parts.map((p, i) => {
+          const label =
+            crumbLabels[p] ??
+            objectById(p)?.title ??
+            departments.find((d) => d.id === p)?.label ??
+            p.charAt(0).toUpperCase() + p.slice(1);
+          return (
+            <span key={i} className="flex items-center gap-1.5">
+              {i > 0 && <span className="text-muted-foreground/40">/</span>}
+              <span className={cn("max-w-[16rem] truncate", i === parts.length - 1 && "font-medium text-foreground")}>
+                {label}
+              </span>
             </span>
-          </span>
-        ))}
+          );
+        })}
       </nav>
       <div className="relative ml-auto hidden w-64 md:block">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />

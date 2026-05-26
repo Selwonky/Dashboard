@@ -26,10 +26,17 @@ const typeGlyph: Partial<Record<ObjectType, LucideIcon>> = {
 
 export function ObjectCard({ obj }: { obj: WorkObject }) {
   const Glyph = typeGlyph[obj.type] ?? Calendar;
+  const priorityDot =
+    obj.priority === "high" ? "bg-destructive" : obj.priority === "medium" ? "bg-warning" : "bg-muted-foreground/40";
+  const priorityLabel =
+    obj.priority === "high" ? "High priority" : obj.priority === "medium" ? "Medium priority" : "Low priority";
   return (
     <Card className="min-w-0 gap-4 transition-shadow hover:shadow-md">
       <CardHeader>
         <CardTitle className="flex min-w-0 items-center gap-2 text-base">
+          {obj.priority && (
+            <span className={`size-2 shrink-0 rounded-full ${priorityDot}`} role="img" aria-label={priorityLabel} title={priorityLabel} />
+          )}
           <Glyph className="size-4 shrink-0 text-muted-foreground" aria-hidden />
           <span className="truncate">{obj.title}</span>
         </CardTitle>
@@ -39,7 +46,7 @@ export function ObjectCard({ obj }: { obj: WorkObject }) {
         </CardAction>
       </CardHeader>
 
-      {(obj.meta?.length || obj.nextAction) && (
+      {(obj.meta?.length || obj.nextAction || obj.dueAt) && (
         <CardContent className="space-y-1.5 text-sm">
           {obj.meta?.slice(0, 3).map((m) => (
             <div key={m.label} className="flex justify-between gap-3">
@@ -51,6 +58,12 @@ export function ObjectCard({ obj }: { obj: WorkObject }) {
             <div className="flex justify-between gap-3">
               <span className="shrink-0 text-muted-foreground">Next action</span>
               <span className="truncate text-right font-medium text-foreground">{obj.nextAction}</span>
+            </div>
+          )}
+          {obj.dueAt && (
+            <div className="flex justify-between gap-3">
+              <span className="shrink-0 text-muted-foreground">Due</span>
+              <span className="truncate text-right font-medium text-foreground">{obj.dueAt}</span>
             </div>
           )}
         </CardContent>
@@ -69,7 +82,7 @@ export function ObjectCard({ obj }: { obj: WorkObject }) {
           to={`/commons/objects/detail/${obj.id}`}
           className={cn("shrink-0 font-medium text-primary hover:underline")}
         >
-          {obj.dueAt ? obj.dueAt : "Open"} →
+          Open →
         </Link>
       </CardFooter>
     </Card>
