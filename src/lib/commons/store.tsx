@@ -1,22 +1,28 @@
 import * as React from "react";
+import { toast } from "sonner";
 import {
   inboxItems as seedInbox,
   tools as seedTools,
   queueActions as seedQueue,
+  outputs as seedOutputs,
+  objectById,
+  deptLabel,
   type InboxItem,
   type ToolConn,
   type QueueAction,
+  type OutputRecord,
 } from "./prototype-data";
 
-type InboxState = Record<string, "pending" | "approved" | "rejected" | "edited">;
+type InboxStatus = "pending" | "processing" | "approved" | "rejected" | "edited";
 
 interface CommonsState {
   inbox: InboxItem[];
-  inboxState: InboxState;
+  inboxState: Record<string, InboxStatus>;
   rejectReasons: Record<string, string>;
   edits: Record<string, string>;
   toolState: Record<string, ToolConn["status"]>;
   queue: QueueAction[];
+  recent: OutputRecord[];
   approve: (id: string) => void;
   reject: (id: string, reason: string) => void;
   saveEdit: (id: string, text: string) => void;
@@ -26,7 +32,7 @@ interface CommonsState {
 const Ctx = React.createContext<CommonsState | null>(null);
 
 export function CommonsProvider({ children }: { children: React.ReactNode }) {
-  const [inboxState, setInboxState] = React.useState<InboxState>(
+  const [inboxState, setInboxState] = React.useState<Record<string, InboxStatus>>(
     () => Object.fromEntries(seedInbox.map((i) => [i.id, "pending"]))
   );
   const [rejectReasons, setRejectReasons] = React.useState<Record<string, string>>({});
@@ -35,30 +41,70 @@ export function CommonsProvider({ children }: { children: React.ReactNode }) {
     () => Object.fromEntries(seedTools.map((t) => [t.id, t.status]))
   );
   const [queue, setQueue] = React.useState<QueueAction[]>(seedQueue);
+  const [recent, setRecent] = React.useState<OutputRecord[]>(seedOutputs);
 
   const approve = (id: string) => {
-    setInboxState((s) => ({ ...s, [id]: "approved" }));
     const item = seedInbox.find((i) => i.id === id);
-    if (item)
+    if (!item || inboxState[id] === "processing") return;
+    setInboxState((s) => ({ ...s, [id]: "processing" }));
+    const t = toast.loading(`Approving ${item.objectTitle}…`);
+    // simulate the Action Broker running the approved work
+    window.setTimeout(() => {
+      setInboxState((s) => ({ ...s, [id]: "approved" }));
       setQueue((q) =>
         q.map((a) =>
-          a.sourceObjectId === item.objectId ? { ...a, status: "completed", updatedAt: "just now" } : a
+          a.sourceObjectId === item.objectId
+            ? { ...a, status: "completed", step: "Done", updatedAt: "just now" }
+            : a
         )
       );
+      // a Compiler Record appears in Recent
+      const obj = objectById(item.objectId);
+      setRecent((r) => [
+        {
+          id: `out_${id}`,
+          title: obj?.title ?? item.objectTitle,
+          type: obj?.typeLabel ?? "Output",
+          department: item.department,
+          generatedBy: obj?.owner ?? "Jo from",
+          statusKind: "done",
+          statusLabel: "Approved",
+          timestamp: "Just now",
+          history: ["Needs approval", "Approved", "Compiled"],
+          summary: obj?.preview ?? "Approved and compiled.",
+          sourceObjectId: item.objectId,
+        },
+        ...r.filter((x) => x.id !== `out_${id}`),
+      ]);
+      toast.success(`Approved · ${deptLabel(item.department)}`, {
+        id: t,
+        description: "A Compiler Record was added to Recent.",
+      });
+    }, 900);
   };
+
   const reject = (id: string, reason: string) => {
     setInboxState((s) => ({ ...s, [id]: "rejected" }));
     setRejectReasons((r) => ({ ...r, [id]: reason }));
+    const item = seedInbox.find((i) => i.id === id);
+    toast(`Sent back for changes · ${item ? deptLabel(item.department) : ""}`, {
+      description: reason ? `Reason: ${reason}` : undefined,
+    });
   };
+
   const saveEdit = (id: string, text: string) => {
     setEdits((e) => ({ ...e, [id]: text }));
     setInboxState((s) => ({ ...s, [id]: s[id] === "pending" ? "edited" : s[id] }));
+    toast.success("Edit saved", { description: "Your changes are kept locally." });
   };
+
   const toggleTool = (id: string) =>
-    setToolState((s) => ({
-      ...s,
-      [id]: s[id] === "connected" ? "not_connected" : s[id] === "not_connected" ? "connected" : s[id],
-    }));
+    setToolState((s) => {
+      const next = s[id] === "connected" ? "not_connected" : s[id] === "not_connected" ? "connected" : s[id];
+      const tool = seedTools.find((t) => t.id === id);
+      if (tool) toast(next === "connected" ? `${tool.label} connected` : `${tool.label} disconnected`);
+      return { ...s, [id]: next };
+    });
 
   const value: CommonsState = {
     inbox: seedInbox,
@@ -67,6 +113,7 @@ export function CommonsProvider({ children }: { children: React.ReactNode }) {
     edits,
     toolState,
     queue,
+    recent,
     approve,
     reject,
     saveEdit,

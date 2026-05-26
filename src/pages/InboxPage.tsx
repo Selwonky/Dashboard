@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Check, Pencil, X, Inbox as InboxIcon } from "lucide-react";
+import { Check, Pencil, X, Inbox as InboxIcon, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,8 +14,6 @@ import { PageHeader, EmptyState } from "@/components/commons/primitives";
 import { StatusBadge } from "@/components/commons/StatusBadge";
 import { deptLabel, objectById, type InboxItem } from "@/lib/commons/prototype-data";
 import { useCommons } from "@/lib/commons/store";
-
-const priorityKind = { high: "destructive", medium: "warning", low: "secondary" } as const;
 
 export function InboxPage() {
   const { inbox, inboxState, edits, rejectReasons, approve, reject, saveEdit } = useCommons();
@@ -63,8 +61,8 @@ export function InboxPage() {
               <div className="flex items-center gap-2">
                 <span className={`size-2 shrink-0 rounded-full ${item.priority === "high" ? "bg-destructive" : item.priority === "medium" ? "bg-warning" : "bg-muted-foreground/40"}`} />
                 <StatusBadge
-                  kind={state === "approved" ? "done" : state === "rejected" ? "failed" : item.statusKind}
-                  label={state === "approved" ? "Approved" : state === "rejected" ? "Rejected" : state === "edited" ? "Edited" : item.statusLabel}
+                  kind={state === "approved" ? "done" : state === "rejected" ? "failed" : state === "processing" ? "in_progress" : item.statusKind}
+                  label={state === "approved" ? "Approved" : state === "rejected" ? "Rejected" : state === "edited" ? "Edited" : state === "processing" ? "Approving…" : item.statusLabel}
                 />
               </div>
               <button onClick={() => open(item)} className="min-w-0 flex-1 text-left">
@@ -82,6 +80,10 @@ export function InboxPage() {
                     <Check className="size-3.5" /> Approve
                   </Button>
                 </div>
+              ) : state === "processing" ? (
+                <span className="flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
+                  <Loader2 className="size-3.5 animate-spin" /> Working…
+                </span>
               ) : (
                 <span className="shrink-0 text-xs text-muted-foreground">
                   {state === "rejected" && rejectReasons[item.id] ? `Reason: ${rejectReasons[item.id]}` : "Done"}

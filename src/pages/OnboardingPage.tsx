@@ -111,7 +111,7 @@ export function OnboardingPage() {
         );
       case 1:
         return (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Card><CardHeader><CardTitle className="text-base">Company name</CardTitle></CardHeader>
               <CardContent><Input value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Company name" /></CardContent></Card>
             <Card><CardHeader><CardTitle className="text-base">Tone</CardTitle><CardDescription>How does your company sound?</CardDescription></CardHeader>
@@ -129,7 +129,7 @@ export function OnboardingPage() {
         );
       case 2:
         return (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Card className="md:col-span-2">
               <CardHeader>
                 <CardTitle className="text-base">Industry</CardTitle>
@@ -197,7 +197,7 @@ export function OnboardingPage() {
         );
       case 3:
         return (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Card><CardHeader><CardTitle className="text-base">Ideal customer</CardTitle></CardHeader><CardContent><Textarea placeholder="Who are your best customers?" /></CardContent></Card>
             <Card><CardHeader><CardTitle className="text-base">Competitors</CardTitle></CardHeader><CardContent><Input placeholder="Add a competitor" /></CardContent></Card>
             <Card className="md:col-span-2"><CardHeader><CardTitle className="text-base">Goals</CardTitle><CardDescription>What does success look like this year?</CardDescription></CardHeader><CardContent><Textarea placeholder="e.g. faster quote turnaround, 20% more pipeline" /></CardContent></Card>
@@ -207,7 +207,7 @@ export function OnboardingPage() {
         return (
           <Card>
             <CardHeader><CardTitle>Connect your Tools</CardTitle><CardDescription>Tools can be connected later. Jo from can still prepare work inside The Commons.</CardDescription></CardHeader>
-            <CardContent className="grid gap-3 sm:grid-cols-2">
+            <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {["Google Drive", "Google Calendar", "Gmail", "Jira"].map((t) => (
                 <div key={t} className="flex items-center justify-between rounded-lg border p-3">
                   <span className="text-sm font-medium">{t}</span>
@@ -219,7 +219,7 @@ export function OnboardingPage() {
         );
       case 5:
         return (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Card><CardHeader><CardTitle className="text-base">Company &amp; Identity</CardTitle></CardHeader>
               <CardContent className="space-y-1 text-sm">
                 <p><span className="text-muted-foreground">Name:</span> {company || "—"}</p>

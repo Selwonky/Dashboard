@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChevronRight, Sparkles } from "lucide-react";
+import { ChevronRight, Sparkles, FileCheck2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -26,8 +26,19 @@ export function OrgChartPage() {
     <>
       <PageHeader
         title="Maestro OrgChart"
-        description="Maestro OrgChart structures how work moves through your company. Start with departments, then define jobs, levels, tasks, and workflow seeds."
+        description="How work is structured beneath you. Tasks roll up to jobs, jobs roll up to departments, and Workflow Seeds produce Compiler Records."
       />
+      <div className="mb-6 flex flex-wrap items-center gap-2 rounded-lg border bg-gradient-to-r from-primary/5 to-[#9333ea]/5 px-4 py-3 text-sm">
+        <Sparkles className="size-4 text-[#9333ea]" />
+        <span><span className="font-medium">You're the Outcome Owner</span> (Head of). Jo from handles IC through Manager work and brings decisions to your Inbox.</span>
+      </div>
+      <div className="mb-5 flex flex-wrap gap-2 text-xs">
+        {(["IC", "Team Lead", "Manager", "Head of"] as const).map((lv) => (
+          <span key={lv} className="flex items-center gap-1.5 rounded-full border px-2.5 py-1">
+            <span className="size-2 rounded-full bg-primary/70" />{lv}{lv === "Head of" && " · you"}
+          </span>
+        ))}
+      </div>
       <div className="grid gap-4 lg:grid-cols-[200px_1fr_1fr]">
         {/* Departments */}
         <Card className="h-fit gap-0 py-2">
@@ -101,13 +112,23 @@ export function OrgChartPage() {
                     ))}
                   </div>
                   {job.workflowSeeds[seed] && (
-                    <div className="mt-3 rounded-lg border bg-accent/40 p-3">
-                      <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                    <div className="mt-3 rounded-lg border bg-gradient-to-br from-primary/5 to-[#9333ea]/10 p-3">
+                      <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-[#9333ea]">
                         <Sparkles className="size-3.5" /> Output preview
                       </p>
                       <p className="text-sm">{job.workflowSeeds[seed].outputPreview}</p>
                     </div>
                   )}
+                </div>
+                <Separator />
+                <div>
+                  <p className="mb-1.5 text-xs font-medium uppercase text-muted-foreground">Compiler Records</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {job.compilerRecords.map((c) => (
+                      <Badge key={c} variant="secondary"><FileCheck2 className="size-3" /> {c}</Badge>
+                    ))}
+                  </div>
+                  <p className="mt-1.5 text-xs text-muted-foreground">Structured outputs this job produces — they appear in Recent.</p>
                 </div>
               </CardContent>
             </Card>

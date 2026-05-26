@@ -31,7 +31,7 @@ export function ObjectsPage() {
         title={title}
         description="An object-first view of work, grouped by status. (Object types are backend-owned; the prototype shows the shared card + board across the current work pool.)"
       />
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {columns.map((col) => {
           const items = workObjects.filter((o) => o.statusKind === col.kind);
           if (!items.length) return null;

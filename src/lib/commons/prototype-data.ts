@@ -27,7 +27,15 @@ export type ObjectType =
   | "signal"
   | "workflow"
   | "task"
-  | "note";
+  | "note"
+  // GTM (under Sales): Risk + Partnerships motions
+  | "insurance_prospect"
+  | "quote_package"
+  | "assessment"
+  | "licensing"
+  | "partner"
+  | "referral"
+  | "checkin";
 
 export type DepartmentId =
   | "sales"
@@ -64,6 +72,8 @@ export interface WorkObject {
   preview: string;
   meta?: { label: string; value: string }[];
   body?: string; // detail body
+  /** GTM motion under Sales: "Pipeline" | "Partnerships" | "Risk" (Sales only). */
+  area?: "Pipeline" | "Partnerships" | "Risk";
 }
 
 export interface InboxItem {
@@ -95,6 +105,8 @@ export interface QueueAction {
   status: ActionStatus;
   sourceObjectId?: string;
   updatedAt: string;
+  step?: string;       // current step in the run
+  nextOutput?: string; // estimated next output (Compiler Record)
 }
 
 export interface OutputRecord {
@@ -107,6 +119,8 @@ export interface OutputRecord {
   statusLabel: string;
   timestamp: string;
   history: string[];
+  summary: string;          // result summary
+  sourceObjectId?: string;  // link back to the object
 }
 
 export interface OrgJob {
@@ -116,6 +130,7 @@ export interface OrgJob {
   subFamily: string;
   tasks: string[];
   workflowSeeds: { name: string; outputPreview: string }[];
+  compilerRecords: string[]; // structured output artifacts the job produces
 }
 
 export interface OrgDepartment {
@@ -175,7 +190,7 @@ export const actionStatusLabel: Record<ActionStatus, string> = {
 
 // ─────────────────────────────── Departments ───────────────────────────────
 export const departments: Department[] = [
-  { id: "sales", label: "Sales", summary: "Find, qualify, and close new Jo from engagements.", activeCount: 4, needsApprovalCount: 2, status: "active", rich: true },
+  { id: "sales", label: "Sales", summary: "Go-to-market: pipeline, partnerships, and risk/insurance motions.", activeCount: 9, needsApprovalCount: 4, status: "active", rich: true },
   { id: "operations", label: "Operations", summary: "Deliver client engagements, staffing, and governance.", activeCount: 2, needsApprovalCount: 1, status: "active", rich: true },
   { id: "marketing", label: "Marketing", summary: "Generate demand through content, search, and brand presence.", activeCount: 3, needsApprovalCount: 1, status: "active", rich: true },
   { id: "finance", label: "Finance", summary: "Manage invoices, collections, cash flow, and reporting.", activeCount: 2, needsApprovalCount: 2, status: "active", rich: true },
@@ -188,12 +203,23 @@ export const departments: Department[] = [
 
 // ─────────────────────────────── Work objects ──────────────────────────────
 export const workObjects: WorkObject[] = [
-  // Sales
-  { id: "obj_sales_acme", type: "prospect", typeLabel: "Prospect", department: "sales", title: "Acme Manufacturing", statusLabel: "Ready for review", statusKind: "attention", owner: "Jo from Sales Team Lead", nextAction: "Approve outreach draft", dueAt: "Today", preview: "Research brief and outreach draft ready for review.", meta: [{ label: "Stage", value: "Qualified · 10%" }, { label: "Contact", value: "Dana Reyes, VP Ops" }], body: "Acme Manufacturing is a 120-person precision-parts maker in Ohio. Jo from researched their site, recent hiring, and press, then drafted a first outreach email focused on reducing quote turnaround." },
-  { id: "obj_sales_brief_acme", type: "research_brief", typeLabel: "Research Brief", department: "sales", title: "Acme Manufacturing — Research Brief", statusLabel: "Complete", statusKind: "done", owner: "Jo from Sales IC", preview: "Company profile, signals, and recommended angle.", meta: [{ label: "Sources", value: "Website, press, hiring" }], body: "Key signals: 3 new ops roles posted, new facility announced, quote-turnaround complaints in reviews. Recommended angle: speed-to-quote." },
-  { id: "obj_sales_draft_acme", type: "outreach_draft", typeLabel: "Outreach Draft", department: "sales", title: "Acme Manufacturing — Outreach Email", statusLabel: "Needs approval", statusKind: "attention", owner: "Jo from Sales Team Lead", nextAction: "Approve to send", dueAt: "Today", preview: "First-touch email focused on quote turnaround.", body: "Hi Dana — noticed Acme is scaling ops with the new Dayton facility. Teams at your stage often lose deals to slow quotes; Jo from helps tighten quote turnaround without adding headcount. Worth a 20-min look?" },
-  { id: "obj_sales_north", type: "prospect", typeLabel: "Prospect", department: "sales", title: "Northwind Logistics", statusLabel: "Researching", statusKind: "in_progress", owner: "Jo from Sales IC", preview: "Gathering signals before drafting outreach.", meta: [{ label: "Stage", value: "New" }] },
-  { id: "obj_sales_summary", type: "status_report", typeLabel: "Weekly Summary", department: "sales", title: "Sales — Weekly Summary", statusLabel: "Draft", statusKind: "neutral", owner: "Jo from Sales Team Lead", preview: "4 active prospects, 2 awaiting approval." },
+  // Sales › Pipeline
+  { id: "obj_sales_acme", area: "Pipeline", type: "prospect", typeLabel: "Prospect", department: "sales", title: "Acme Manufacturing", statusLabel: "Ready for review", statusKind: "attention", owner: "Jo from Sales Team Lead", nextAction: "Approve outreach draft", dueAt: "Today", preview: "Research brief and outreach draft ready for review.", meta: [{ label: "Stage", value: "Qualified · 10%" }, { label: "Contact", value: "Dana Reyes, VP Ops" }], body: "Acme Manufacturing is a 120-person precision-parts maker in Ohio. Jo from researched their site, recent hiring, and press, then drafted a first outreach email focused on reducing quote turnaround." },
+  { id: "obj_sales_brief_acme", area: "Pipeline", type: "research_brief", typeLabel: "Research Brief", department: "sales", title: "Acme Manufacturing — Research Brief", statusLabel: "Complete", statusKind: "done", owner: "Jo from Sales IC", preview: "Company profile, signals, and recommended angle.", meta: [{ label: "Sources", value: "Website, press, hiring" }], body: "Key signals: 3 new ops roles posted, new facility announced, quote-turnaround complaints in reviews. Recommended angle: speed-to-quote." },
+  { id: "obj_sales_draft_acme", area: "Pipeline", type: "outreach_draft", typeLabel: "Outreach Draft", department: "sales", title: "Acme Manufacturing — Outreach Email", statusLabel: "Needs approval", statusKind: "attention", owner: "Jo from Sales Team Lead", nextAction: "Approve to send", dueAt: "Today", preview: "First-touch email focused on quote turnaround.", body: "Hi Dana — noticed Acme is scaling ops with the new Dayton facility. Teams at your stage often lose deals to slow quotes; Jo from helps tighten quote turnaround without adding headcount. Worth a 20-min look?" },
+  { id: "obj_sales_north", area: "Pipeline", type: "prospect", typeLabel: "Prospect", department: "sales", title: "Northwind Logistics", statusLabel: "Researching", statusKind: "in_progress", owner: "Jo from Sales IC", preview: "Gathering signals before drafting outreach.", meta: [{ label: "Stage", value: "New" }] },
+  { id: "obj_sales_summary", area: "Pipeline", type: "status_report", typeLabel: "Weekly Summary", department: "sales", title: "Sales — Weekly Summary", statusLabel: "Draft", statusKind: "neutral", owner: "Jo from Sales Team Lead", preview: "4 active prospects, 2 awaiting approval." },
+
+  // Sales › Partnerships (GTM)
+  { id: "obj_part_techstars", area: "Partnerships", type: "partner", typeLabel: "Partner", department: "sales", title: "Midwest SMB Alliance", statusLabel: "Active", statusKind: "done", owner: "Jo from Partnerships Lead", preview: "Referral partner; 2 intros this quarter.", meta: [{ label: "Type", value: "Referral partner" }, { label: "Intros", value: "2 this quarter" }], body: "The Midwest SMB Alliance refers member operators to Jo from. Relationship is healthy; last check-in was 3 weeks ago." },
+  { id: "obj_part_referral", area: "Partnerships", type: "referral", typeLabel: "Referral", department: "sales", title: "Referral — Lakeside Fabrication", statusLabel: "Needs approval", statusKind: "attention", owner: "Jo from Partnerships Lead", nextAction: "Approve intro reply", dueAt: "Today", preview: "Warm intro from Midwest SMB Alliance; reply drafted.", body: "Lakeside Fabrication was referred by the Midwest SMB Alliance. Jo from drafted a warm reply proposing a 20-minute intro call this week." },
+  { id: "obj_part_checkin", area: "Partnerships", type: "checkin", typeLabel: "Relationship Check-in", department: "sales", title: "Quarterly check-in — Midwest SMB Alliance", statusLabel: "Scheduled", statusKind: "scheduled", owner: "Jo from Partnerships Lead", nextAction: "Confirm agenda", dueAt: "Next week", preview: "Agenda drafted: referral volume, co-marketing.", body: "Quarterly relationship check-in. Jo from prepared an agenda covering referral volume, a co-marketing idea, and renewal of the partner terms." },
+
+  // Sales › Risk (GTM)
+  { id: "obj_risk_prospect", area: "Risk", type: "insurance_prospect", typeLabel: "Insurance Prospect", department: "sales", title: "Cedar Valley Roofing — Coverage Review", statusLabel: "Ready for review", statusKind: "attention", owner: "Jo from Risk Lead", nextAction: "Approve quote package", dueAt: "Today", preview: "GL + workers' comp review; quote package prepared.", meta: [{ label: "Lines", value: "GL, Workers' comp" }, { label: "Renewal", value: "60 days" }], body: "Cedar Valley Roofing's coverage renews in 60 days. Jo from reviewed exposure, flagged a gap in general liability limits, and assembled a quote package across two carriers." },
+  { id: "obj_risk_quote", area: "Risk", type: "quote_package", typeLabel: "Quote Package", department: "sales", title: "Cedar Valley Roofing — Quote Package", statusLabel: "Needs approval", statusKind: "attention", owner: "Jo from Risk Lead", nextAction: "Approve to send", dueAt: "Today", preview: "Two-carrier comparison with recommended option.", body: "Side-by-side of two carriers with premium, limits, and deductible. Recommended option raises GL limits to close the flagged gap for +$60/mo." },
+  { id: "obj_risk_assessment", area: "Risk", type: "assessment", typeLabel: "Governance Assessment", department: "sales", title: "Square One Foundry — Governance Assessment", statusLabel: "Complete", statusKind: "done", owner: "Jo from Risk IC", preview: "Light governance review for a new engagement.", body: "Reviewed data handling, access, and contract terms for the Square One Foundry engagement. No blockers; one recommendation logged." },
+  { id: "obj_risk_licensing", area: "Risk", type: "licensing", typeLabel: "Licensing Reminder", department: "sales", title: "Producer license renewal — Ohio", statusLabel: "Renewal upcoming", statusKind: "scheduled", owner: "Jo from Risk Lead", nextAction: "Review renewal", dueAt: "In 3 weeks", preview: "Ohio producer license renews in 21 days.", body: "Ohio producer license renews in 21 days. Jo from prepared the renewal checklist and continuing-education confirmation." },
 
   // Operations
   { id: "obj_ops_foundry", type: "engagement", typeLabel: "Engagement", department: "operations", title: "Square One Foundry — Onboarding", statusLabel: "Ready for review", statusKind: "attention", owner: "Jo from Operations Team Lead", nextAction: "Approve kickoff checklist", dueAt: "Today", preview: "Kickoff checklist prepared and ready for approval.", meta: [{ label: "Phase", value: "Kickoff" }], body: "New engagement with Square One Foundry. Jo from assembled the kickoff checklist, drafted the welcome note, and scheduled the kickoff call." },
@@ -230,50 +256,55 @@ export const inboxItems: InboxItem[] = [
   { id: "inbox_003", department: "marketing", title: "Approve LinkedIn post for Friday", objectTitle: "LinkedIn post — Friday", objectId: "obj_mkt_li", priority: "medium", dueAt: "Fri", statusKind: "attention", statusLabel: "Needs approval", preview: "Short post on Human + Machine work for SMBs." },
   { id: "inbox_004", department: "finance", title: "Approve invoice for Square One Foundry", objectTitle: "Invoice — Square One Foundry", objectId: "obj_fin_inv_foundry", priority: "high", dueAt: "Today", statusKind: "attention", statusLabel: "Needs approval", preview: "$4,500 · monthly engagement fee." },
   { id: "inbox_005", department: "legal", title: "Review subcontractor agreement", objectTitle: "Square One Foundry — SOW", objectId: "obj_legal_sow", priority: "high", dueAt: "Today", statusKind: "attention", statusLabel: "Needs review", preview: "Statement of work, final language for sign-off." },
+  { id: "inbox_006", department: "sales", title: "Approve insurance quote package", objectTitle: "Cedar Valley Roofing — Quote Package", objectId: "obj_risk_quote", priority: "high", dueAt: "Today", statusKind: "attention", statusLabel: "Needs approval", preview: "Two-carrier comparison with recommended option." },
+  { id: "inbox_007", department: "sales", title: "Approve referral intro reply", objectTitle: "Referral — Lakeside Fabrication", objectId: "obj_part_referral", priority: "medium", dueAt: "Today", statusKind: "attention", statusLabel: "Needs approval", preview: "Warm intro from Midwest SMB Alliance; reply drafted." },
 ];
 
 // ─────────────────────────────── Queue ─────────────────────────────────────
 export const queueActions: QueueAction[] = [
-  { id: "act_001", title: "Draft outreach — Acme Manufacturing", department: "sales", status: "needs_approval", sourceObjectId: "obj_sales_draft_acme", updatedAt: "2m ago" },
-  { id: "act_002", title: "Generate weekly status report — Square One Foundry", department: "operations", status: "needs_approval", sourceObjectId: "obj_ops_status", updatedAt: "11m ago" },
-  { id: "act_003", title: "Prepare invoice — Square One Foundry", department: "finance", status: "needs_approval", sourceObjectId: "obj_fin_inv_foundry", updatedAt: "18m ago" },
-  { id: "act_004", title: "Compile OrgChart record — Sales", department: "technology", status: "running", updatedAt: "just now" },
-  { id: "act_005", title: "Sync document mirror — Square One Foundry", department: "operations", status: "running", updatedAt: "1m ago" },
-  { id: "act_006", title: "Research Northwind Logistics", department: "sales", status: "queued", sourceObjectId: "obj_sales_north", updatedAt: "5m ago" },
-  { id: "act_007", title: "Draft Q3 demand campaign", department: "marketing", status: "queued", updatedAt: "20m ago" },
-  { id: "act_008", title: "Build cash flow summary — May", department: "finance", status: "completed", sourceObjectId: "obj_fin_cash", updatedAt: "1h ago" },
-  { id: "act_009", title: "Index intake documents", department: "operations", status: "completed", updatedAt: "2h ago" },
-  { id: "act_010", title: "Sync calendar availability", department: "operations", status: "failed", updatedAt: "3h ago" },
+  { id: "act_001", title: "Draft outreach — Acme Manufacturing", department: "sales", status: "needs_approval", sourceObjectId: "obj_sales_draft_acme", updatedAt: "2m ago", step: "Awaiting your approval", nextOutput: "Sent outreach email" },
+  { id: "act_002", title: "Generate weekly status report — Square One Foundry", department: "operations", status: "needs_approval", sourceObjectId: "obj_ops_status", updatedAt: "11m ago", step: "Awaiting your review", nextOutput: "Client status report" },
+  { id: "act_003", title: "Prepare invoice — Square One Foundry", department: "finance", status: "needs_approval", sourceObjectId: "obj_fin_inv_foundry", updatedAt: "18m ago", step: "Awaiting your approval", nextOutput: "Sent invoice" },
+  { id: "act_004", title: "Compile OrgChart record — Sales", department: "technology", status: "running", updatedAt: "just now", step: "Compiling structure", nextOutput: "Compiler Record" },
+  { id: "act_005", title: "Sync document mirror — Square One Foundry", department: "operations", status: "running", updatedAt: "1m ago", step: "Indexing documents", nextOutput: "Indexed knowledge source" },
+  { id: "act_006", title: "Research Northwind Logistics", department: "sales", status: "queued", sourceObjectId: "obj_sales_north", updatedAt: "5m ago", step: "Queued", nextOutput: "Research Brief" },
+  { id: "act_007", title: "Draft Q3 demand campaign", department: "marketing", status: "queued", updatedAt: "20m ago", step: "Queued", nextOutput: "Campaign plan" },
+  { id: "act_008", title: "Build cash flow summary — May", department: "finance", status: "completed", sourceObjectId: "obj_fin_cash", updatedAt: "1h ago", step: "Done", nextOutput: "Cash Flow Summary" },
+  { id: "act_009", title: "Index intake documents", department: "operations", status: "completed", updatedAt: "2h ago", step: "Done", nextOutput: "Indexed documents" },
+  { id: "act_010", title: "Sync calendar availability", department: "operations", status: "failed", updatedAt: "3h ago", step: "Connection needed", nextOutput: "Calendar availability" },
 ];
 
 // ─────────────────────────────── Recent outputs ────────────────────────────
 export const outputs: OutputRecord[] = [
-  { id: "out_001", title: "Acme Manufacturing — Research Brief", type: "Research Brief", department: "sales", generatedBy: "Jo from Sales IC", statusKind: "done", statusLabel: "Complete", timestamp: "Today, 9:14 AM", history: ["Queued", "Running", "Completed"] },
-  { id: "out_002", title: "Weekly Client Status — Square One Foundry", type: "Status Report", department: "operations", generatedBy: "Jo from Operations Team Lead", statusKind: "attention", statusLabel: "Needs review", timestamp: "Today, 8:02 AM", history: ["Queued", "Running", "Needs approval"] },
-  { id: "out_003", title: "LinkedIn post — Friday", type: "Content Draft", department: "marketing", generatedBy: "Jo from Marketing Team Lead", statusKind: "attention", statusLabel: "Needs approval", timestamp: "Yesterday, 4:30 PM", history: ["Draft", "Needs approval"] },
-  { id: "out_004", title: "Invoice — Square One Foundry", type: "Invoice", department: "finance", generatedBy: "Jo from Finance Team Lead", statusKind: "attention", statusLabel: "Needs approval", timestamp: "Yesterday, 2:10 PM", history: ["Queued", "Running", "Needs approval"] },
-  { id: "out_005", title: "Square One Foundry — SOW", type: "Contract Draft", department: "legal", generatedBy: "Jo from Legal Team Lead", statusKind: "attention", statusLabel: "Needs review", timestamp: "Yesterday, 11:45 AM", history: ["Draft", "Needs review"] },
-  { id: "out_006", title: "Sprint 0 — Stabilization", type: "Sprint Record", department: "technology", generatedBy: "Jo from Technology Team Lead", statusKind: "in_progress", statusLabel: "In progress", timestamp: "Mon, 10:00 AM", history: ["Created", "In progress"] },
+  { id: "out_001", title: "Acme Manufacturing — Research Brief", type: "Research Brief", department: "sales", generatedBy: "Jo from Sales IC", statusKind: "done", statusLabel: "Complete", timestamp: "Today, 9:14 AM", history: ["Queued", "Running", "Completed"], summary: "Profile, 3 buying signals, and a speed-to-quote angle.", sourceObjectId: "obj_sales_brief_acme" },
+  { id: "out_002", title: "Weekly Client Status — Square One Foundry", type: "Status Report", department: "operations", generatedBy: "Jo from Operations Team Lead", statusKind: "attention", statusLabel: "Needs review", timestamp: "Today, 8:02 AM", history: ["Queued", "Running", "Needs approval"], summary: "On track — 2 deliverables shipped, 1 in progress.", sourceObjectId: "obj_ops_status" },
+  { id: "out_003", title: "LinkedIn post — Friday", type: "Content Draft", department: "marketing", generatedBy: "Jo from Marketing Team Lead", statusKind: "attention", statusLabel: "Needs approval", timestamp: "Yesterday, 4:30 PM", history: ["Draft", "Needs approval"], summary: "Short post on Human + Machine work for SMBs.", sourceObjectId: "obj_mkt_li" },
+  { id: "out_004", title: "Invoice — Square One Foundry", type: "Invoice", department: "finance", generatedBy: "Jo from Finance Team Lead", statusKind: "attention", statusLabel: "Needs approval", timestamp: "Yesterday, 2:10 PM", history: ["Queued", "Running", "Needs approval"], summary: "$4,500 monthly engagement fee, 2 line items.", sourceObjectId: "obj_fin_inv_foundry" },
+  { id: "out_005", title: "Square One Foundry — SOW", type: "Contract Draft", department: "legal", generatedBy: "Jo from Legal Team Lead", statusKind: "attention", statusLabel: "Needs review", timestamp: "Yesterday, 11:45 AM", history: ["Draft", "Needs review"], summary: "Scope, deliverables, and term drafted for sign-off.", sourceObjectId: "obj_legal_sow" },
+  { id: "out_006", title: "Cedar Valley Roofing — Quote Package", type: "Quote Package", department: "sales", generatedBy: "Jo from Risk Lead", statusKind: "attention", statusLabel: "Needs approval", timestamp: "Yesterday, 9:20 AM", history: ["Queued", "Running", "Needs approval"], summary: "Two-carrier comparison; recommended option closes a GL gap.", sourceObjectId: "obj_risk_quote" },
+  { id: "out_007", title: "Sprint 0 — Stabilization", type: "Sprint Record", department: "technology", generatedBy: "Jo from Technology Team Lead", statusKind: "in_progress", statusLabel: "In progress", timestamp: "Mon, 10:00 AM", history: ["Created", "In progress"], summary: "5 stabilization items tracked this sprint.", sourceObjectId: "obj_tech_sprint" },
 ];
 
 // ─────────────────────────────── Maestro OrgChart ──────────────────────────
 export const orgChart: OrgDepartment[] = [
   { id: "sales", label: "Sales", jobs: [
-    { id: "sales_tl", title: "Sales Team Lead", level: "Team Lead", subFamily: "sales_outreach", tasks: ["Draft outreach", "Assemble proposal", "Coordinate IC research"], workflowSeeds: [{ name: "First-touch outreach", outputPreview: "A researched first-touch email tailored to the prospect's signals." }, { name: "Weekly pipeline summary", outputPreview: "A short summary of active prospects and approvals needed." }] },
-    { id: "sales_ic", title: "Sales Researcher", level: "IC", subFamily: "sales_research", tasks: ["Gather company signals", "Build research brief", "Find contacts"], workflowSeeds: [{ name: "Research brief", outputPreview: "Company profile, signals, and a recommended angle." }] },
+    { id: "sales_tl", title: "Sales Team Lead", level: "Team Lead", subFamily: "sales_outreach", tasks: ["Draft outreach", "Assemble proposal", "Coordinate IC research"], workflowSeeds: [{ name: "First-touch outreach", outputPreview: "A researched first-touch email tailored to the prospect's signals." }, { name: "Weekly pipeline summary", outputPreview: "A short summary of active prospects and approvals needed." }], compilerRecords: ["Outreach Email", "Pipeline Summary"] },
+    { id: "sales_ic", title: "Sales Researcher", level: "IC", subFamily: "sales_research", tasks: ["Gather company signals", "Build research brief", "Find contacts"], workflowSeeds: [{ name: "Research brief", outputPreview: "Company profile, signals, and a recommended angle." }], compilerRecords: ["Research Brief", "Contact List"] },
+    { id: "part_lead", title: "Partnerships Lead", level: "Manager", subFamily: "gtm_partnerships", tasks: ["Manage partner relationships", "Reply to referrals", "Run quarterly check-ins"], workflowSeeds: [{ name: "Referral reply", outputPreview: "A warm reply to a partner referral proposing an intro call." }, { name: "Check-in agenda", outputPreview: "A prepared agenda for a quarterly partner check-in." }], compilerRecords: ["Referral Reply", "Check-in Agenda"] },
+    { id: "risk_lead", title: "Risk Lead", level: "Manager", subFamily: "gtm_risk", tasks: ["Review coverage", "Assemble quote packages", "Track licensing"], workflowSeeds: [{ name: "Quote package", outputPreview: "A two-carrier comparison with a recommended option." }, { name: "Licensing reminder", outputPreview: "A renewal checklist for an upcoming producer license." }], compilerRecords: ["Quote Package", "Governance Assessment"] },
   ] },
   { id: "operations", label: "Operations", jobs: [
-    { id: "ops_tl", title: "Operations Team Lead", level: "Team Lead", subFamily: "ops_delivery", tasks: ["Run kickoff", "Track deliverables", "Send status reports"], workflowSeeds: [{ name: "Weekly status report", outputPreview: "An on-track / at-risk summary with shipped and in-progress work." }, { name: "Kickoff checklist", outputPreview: "A prepared onboarding checklist for a new engagement." }] },
-    { id: "ops_mgr", title: "Operations Manager", level: "Manager", subFamily: "ops_governance", tasks: ["Handle escalations", "Approve deliverables"], workflowSeeds: [{ name: "Escalation brief", outputPreview: "A summary of an issue with options and a recommendation." }] },
+    { id: "ops_tl", title: "Operations Team Lead", level: "Team Lead", subFamily: "ops_delivery", tasks: ["Run kickoff", "Track deliverables", "Send status reports"], workflowSeeds: [{ name: "Weekly status report", outputPreview: "An on-track / at-risk summary with shipped and in-progress work." }, { name: "Kickoff checklist", outputPreview: "A prepared onboarding checklist for a new engagement." }], compilerRecords: ["Status Report", "Kickoff Checklist"] },
+    { id: "ops_mgr", title: "Operations Manager", level: "Manager", subFamily: "ops_governance", tasks: ["Handle escalations", "Approve deliverables"], workflowSeeds: [{ name: "Escalation brief", outputPreview: "A summary of an issue with options and a recommendation." }], compilerRecords: ["Escalation Brief"] },
   ] },
   { id: "marketing", label: "Marketing", jobs: [
-    { id: "mkt_tl", title: "Marketing Team Lead", level: "Team Lead", subFamily: "content", tasks: ["Draft content", "Plan calendar", "Run campaigns"], workflowSeeds: [{ name: "LinkedIn post", outputPreview: "A short, on-brand post ready to approve and schedule." }] },
+    { id: "mkt_tl", title: "Marketing Team Lead", level: "Team Lead", subFamily: "content", tasks: ["Draft content", "Plan calendar", "Run campaigns"], workflowSeeds: [{ name: "LinkedIn post", outputPreview: "A short, on-brand post ready to approve and schedule." }], compilerRecords: ["Content Draft", "Campaign Plan"] },
   ] },
   { id: "finance", label: "Finance", jobs: [
-    { id: "fin_tl", title: "Finance Team Lead", level: "Team Lead", subFamily: "billing", tasks: ["Prepare invoices", "Follow up collections", "Summarize cash flow"], workflowSeeds: [{ name: "Monthly invoice", outputPreview: "A prepared invoice with line items, ready to approve and send." }] },
+    { id: "fin_tl", title: "Finance Team Lead", level: "Team Lead", subFamily: "billing", tasks: ["Prepare invoices", "Follow up collections", "Summarize cash flow"], workflowSeeds: [{ name: "Monthly invoice", outputPreview: "A prepared invoice with line items, ready to approve and send." }], compilerRecords: ["Invoice", "Cash Flow Summary"] },
   ] },
   { id: "legal", label: "Legal", jobs: [
-    { id: "legal_tl", title: "Legal Team Lead", level: "Team Lead", subFamily: "contracts", tasks: ["Draft contracts", "Review terms", "Track filings"], workflowSeeds: [{ name: "Statement of work", outputPreview: "A drafted SOW with scope, deliverables, and term." }] },
+    { id: "legal_tl", title: "Legal Team Lead", level: "Team Lead", subFamily: "contracts", tasks: ["Draft contracts", "Review terms", "Track filings"], workflowSeeds: [{ name: "Statement of work", outputPreview: "A drafted SOW with scope, deliverables, and term." }], compilerRecords: ["Contract Draft", "Filing Record"] },
   ] },
 ];
 
@@ -308,3 +339,9 @@ export const objectsByDept = (id: DepartmentId) =>
 
 export const objectById = (id: string) =>
   workObjects.find((o) => o.id === id);
+
+export const outputBySourceObject = (objectId: string) =>
+  outputs.find((o) => o.sourceObjectId === objectId);
+
+// Sales GTM areas (Risk + Partnerships live under Sales, not as departments).
+export const salesAreas = ["Pipeline", "Partnerships", "Risk"] as const;

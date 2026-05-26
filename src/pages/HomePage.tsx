@@ -33,7 +33,7 @@ export function HomePage() {
       />
 
       <Section title="Today's work">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {todays.map((o) => <ObjectCard key={o.id} obj={o} />)}
         </div>
       </Section>
@@ -70,7 +70,7 @@ export function HomePage() {
         title="Work areas"
         action={<Link to="/commons/departments/sales" className="text-sm font-medium text-primary hover:underline">All departments →</Link>}
       >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {departments.filter((d) => d.rich).map((d) => {
             const Icon = deptIcon[d.id];
             return (
@@ -102,7 +102,7 @@ export function HomePage() {
         title="Recent outputs"
         action={<Link to="/commons/recent" className="text-sm font-medium text-primary hover:underline">View all →</Link>}
       >
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {outputs.slice(0, 3).map((o) => (
             <Card key={o.id} className="gap-2">
               <CardHeader>

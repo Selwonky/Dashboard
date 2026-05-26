@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "sonner";
 import { CommonsProvider } from "@/lib/commons/store";
 import { CommonsShell } from "@/components/commons/CommonsShell";
 import { WelcomePage } from "@/pages/WelcomePage";
@@ -16,6 +17,7 @@ import { SettingsPage } from "@/pages/SettingsPage";
 export default function App() {
   return (
     <CommonsProvider>
+      <Toaster position="bottom-right" richColors closeButton />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<WelcomePage />} />

@@ -19,7 +19,7 @@ function ToolsSettings() {
         description="Connect Drive, Calendar, or Gmail when you're ready. Jo from can still prepare work inside The Commons."
       />
       <TooltipProvider>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {tools.map((t) => {
             const status = toolState[t.id];
             const connected = status === "connected";
@@ -86,14 +86,68 @@ export function SettingsPage() {
     );
   }
 
-  const placeholder = setting === "security"
-    ? { icon: Shield, title: "Security & Access", desc: "Manage who can review, approve, and connect Tools. This area is on the way." }
-    : { icon: CreditCard, title: "Billing", desc: "Plans, usage, and invoices. This area is on the way." };
+  if (setting === "security") {
+    return (
+      <>
+        <PageHeader title="Security & Access" description="Who can review, approve, and connect Tools in your workspace." />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base"><Shield className="size-4 text-muted-foreground" /> Access mode</CardTitle>
+              <CardDescription>Customer Zero — single-user.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <div className="flex items-center justify-between">
+                <span>Jeremy Knowles</span>
+                <Badge variant="success"><Check className="size-3" /> Full access · Outcome Owner</Badge>
+              </div>
+              <p className="text-muted-foreground">You can review, approve, edit, reject, and connect Tools.</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Team access</CardTitle>
+              <CardDescription>Inviting teammates with scoped access.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm">
+              <Badge variant="outline">Coming later</Badge>
+              <p className="text-muted-foreground">Multi-user access is deferred for the Customer Zero prototype — no enterprise controls are live yet.</p>
+            </CardContent>
+          </Card>
+        </div>
+        <p className="mt-6 text-xs text-muted-foreground">Prototype: access state is illustrative. No sign-in, sessions, or credentials are stored.</p>
+      </>
+    );
+  }
 
+  // billing
   return (
     <>
-      <PageHeader title={placeholder.title} />
-      <EmptyState icon={placeholder.icon} title="We're preparing this part of your workspace." description={placeholder.desc} />
+      <PageHeader title="Billing" description="Plan and access — a commercial placeholder for the prototype." />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base"><CreditCard className="size-4 text-muted-foreground" /> Current plan</CardTitle>
+            <CardDescription>Customer Zero</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            <Badge variant="secondary">Internal · not billed</Badge>
+            <p className="text-muted-foreground">The commercial version will show plan tier, usage, and invoices here.</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Payment</CardTitle>
+            <CardDescription>No payment processing in the prototype.</CardDescription>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground">
+            Billing and entitlements are part of commercial hardening — intentionally not wired here.
+          </CardContent>
+          <CardFooter>
+            <Button variant="outline" disabled>Manage plan (coming later)</Button>
+          </CardFooter>
+        </Card>
+      </div>
     </>
   );
 }

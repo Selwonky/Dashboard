@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import {
   Workflow, Radio, Briefcase, CircleCheck, Zap, FileText, StickyNote,
-  Calendar, Megaphone, Wallet, FileSignature, Boxes, Search, Mail, type LucideIcon,
+  Calendar, Megaphone, Wallet, FileSignature, Boxes, Search, Mail,
+  Handshake, Users, Shield, ShieldCheck, FileBadge, BadgeCheck, type LucideIcon,
 } from "lucide-react";
 import {
   Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction,
@@ -17,15 +18,19 @@ const typeGlyph: Partial<Record<ObjectType, LucideIcon>> = {
   checklist: CircleCheck, status_report: FileText, content_draft: FileText,
   campaign: Megaphone, invoice: Wallet, agreement: FileSignature, sprint: Boxes,
   ticket: Zap, contract: FileSignature, note: StickyNote,
+  // GTM (Sales)
+  partner: Handshake, referral: Users, checkin: Handshake,
+  insurance_prospect: Shield, quote_package: ShieldCheck, assessment: BadgeCheck,
+  licensing: FileBadge,
 };
 
 export function ObjectCard({ obj }: { obj: WorkObject }) {
   const Glyph = typeGlyph[obj.type] ?? Calendar;
   return (
-    <Card className="gap-4 transition-shadow hover:shadow-md">
+    <Card className="min-w-0 gap-4 transition-shadow hover:shadow-md">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <Glyph className="size-4 text-muted-foreground" aria-hidden />
+        <CardTitle className="flex min-w-0 items-center gap-2 text-base">
+          <Glyph className="size-4 shrink-0 text-muted-foreground" aria-hidden />
           <span className="truncate">{obj.title}</span>
         </CardTitle>
         <CardDescription className="line-clamp-2">{obj.preview}</CardDescription>
@@ -38,29 +43,31 @@ export function ObjectCard({ obj }: { obj: WorkObject }) {
         <CardContent className="space-y-1.5 text-sm">
           {obj.meta?.slice(0, 3).map((m) => (
             <div key={m.label} className="flex justify-between gap-3">
-              <span className="text-muted-foreground">{m.label}</span>
-              <span className="font-medium text-foreground">{m.value}</span>
+              <span className="shrink-0 text-muted-foreground">{m.label}</span>
+              <span className="truncate text-right font-medium text-foreground">{m.value}</span>
             </div>
           ))}
           {obj.nextAction && (
             <div className="flex justify-between gap-3">
-              <span className="text-muted-foreground">Next action</span>
-              <span className="font-medium text-foreground">{obj.nextAction}</span>
+              <span className="shrink-0 text-muted-foreground">Next action</span>
+              <span className="truncate text-right font-medium text-foreground">{obj.nextAction}</span>
             </div>
           )}
         </CardContent>
       )}
 
       <CardFooter className="gap-2 text-sm text-muted-foreground">
-        <Avatar size="sm">
-          <AvatarFallback>{getInitials(obj.owner.replace("Jo from ", ""))}</AvatarFallback>
-        </Avatar>
-        <span className="truncate">{obj.owner}</span>
-        <span className="text-muted-foreground/50">·</span>
-        <span className="shrink-0">{deptLabel(obj.department)}</span>
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <Avatar size="sm" className="shrink-0">
+            <AvatarFallback>{getInitials(obj.owner.replace("Jo from ", ""))}</AvatarFallback>
+          </Avatar>
+          <span className="truncate">{obj.owner}</span>
+          <span className="shrink-0 text-muted-foreground/50">·</span>
+          <span className="shrink-0">{deptLabel(obj.department)}</span>
+        </div>
         <Link
           to={`/commons/objects/detail/${obj.id}`}
-          className={cn("ml-auto shrink-0 font-medium text-primary hover:underline")}
+          className={cn("shrink-0 font-medium text-primary hover:underline")}
         >
           {obj.dueAt ? obj.dueAt : "Open"} →
         </Link>

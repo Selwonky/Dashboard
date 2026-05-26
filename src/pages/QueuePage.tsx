@@ -19,7 +19,7 @@ export function QueuePage() {
     <>
       <PageHeader
         title="Queue"
-        description="Work Jo from is preparing and running. Items needing approval surface in your Inbox."
+        description="Work Jo from is preparing and running. This is machine work in flight — anything that needs a human decision moves to your Inbox."
       />
 
       <div className="mb-6 flex flex-wrap gap-2">
@@ -41,7 +41,12 @@ export function QueuePage() {
                   <StatusBadge kind={actionStatusKind[a.status]} label={actionStatusLabel[a.status]} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{a.title}</p>
-                    <p className="text-xs text-muted-foreground">{deptLabel(a.department)} · {a.updatedAt}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {deptLabel(a.department)}
+                      {a.step && <> · {a.step}</>}
+                      {a.nextOutput && <> · next: <span className="font-medium text-foreground/70">{a.nextOutput}</span></>}
+                      {" · "}{a.updatedAt}
+                    </p>
                   </div>
                   {a.status === "needs_approval" && (
                     <Link to="/commons/inbox" className="shrink-0 text-sm font-medium text-primary hover:underline">Review →</Link>

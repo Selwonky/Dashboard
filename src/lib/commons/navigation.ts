@@ -1,7 +1,7 @@
 import {
-  Home, Inbox, ListChecks, Clock, Workflow, Radio, Briefcase, CircleCheck,
-  Zap, Boxes, Megaphone, Users, Wallet, Cpu, LifeBuoy, Calculator, Settings2,
-  Scale, Shield, Plug, CreditCard, Compass, type LucideIcon,
+  LayoutGrid, Inbox, Activity, History, Workflow, Radio, Briefcase, CircleCheck,
+  Zap, Boxes, Megaphone, Users, Wallet, Server, LifeBuoy, Calculator, Workflow as Ops,
+  Scale, Shield, Plug, CreditCard, Compass, TrendingUp, Network, type LucideIcon,
 } from "lucide-react";
 import type { DepartmentId } from "./prototype-data";
 
@@ -19,10 +19,10 @@ export const navGroups: NavGroup[] = [
   {
     label: "Start",
     items: [
-      { label: "Home", to: "/commons", icon: Home },
+      { label: "Home", to: "/commons", icon: LayoutGrid },
       { label: "Inbox", to: "/commons/inbox", icon: Inbox },
-      { label: "Queue", to: "/commons/queue", icon: ListChecks },
-      { label: "Recent", to: "/commons/recent", icon: Clock },
+      { label: "Queue", to: "/commons/queue", icon: Activity },
+      { label: "Recent", to: "/commons/recent", icon: History },
     ],
   },
   {
@@ -39,21 +39,22 @@ export const navGroups: NavGroup[] = [
   {
     label: "Departments",
     items: [
-      { label: "Sales", to: "/commons/departments/sales", icon: Megaphone },
+      { label: "Sales", to: "/commons/departments/sales", icon: TrendingUp },
       { label: "Marketing", to: "/commons/departments/marketing", icon: Megaphone },
       { label: "Workforce", to: "/commons/departments/workforce", icon: Users },
       { label: "Finance", to: "/commons/departments/finance", icon: Wallet },
-      { label: "Technology", to: "/commons/departments/technology", icon: Cpu },
+      { label: "Technology", to: "/commons/departments/technology", icon: Server },
       { label: "Support", to: "/commons/departments/support", icon: LifeBuoy },
       { label: "Accounting", to: "/commons/departments/accounting", icon: Calculator },
-      { label: "Operations", to: "/commons/departments/operations", icon: Settings2 },
+      { label: "Operations", to: "/commons/departments/operations", icon: Ops },
       { label: "Legal", to: "/commons/departments/legal", icon: Scale },
     ],
   },
   {
     label: "Settings",
     items: [
-      { label: "Security", to: "/commons/settings/security", icon: Shield },
+      { label: "Maestro OrgChart", to: "/commons/orgchart", icon: Network },
+      { label: "Security & Access", to: "/commons/settings/security", icon: Shield },
       { label: "Tools", to: "/commons/settings/tools", icon: Plug },
       { label: "Billing", to: "/commons/settings/billing", icon: CreditCard },
       { label: "Onboarding", to: "/commons/settings/onboarding", icon: Compass },
@@ -62,7 +63,7 @@ export const navGroups: NavGroup[] = [
 ];
 
 export const deptIcon: Record<DepartmentId, LucideIcon> = {
-  sales: Megaphone, marketing: Megaphone, workforce: Users, finance: Wallet,
-  technology: Cpu, support: LifeBuoy, accounting: Calculator, operations: Settings2,
+  sales: TrendingUp, marketing: Megaphone, workforce: Users, finance: Wallet,
+  technology: Server, support: LifeBuoy, accounting: Calculator, operations: Ops,
   legal: Scale,
 };
