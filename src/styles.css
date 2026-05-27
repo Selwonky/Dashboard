@@ -1,0 +1,54 @@
+/* Commons prototype style entry — consumes the canonical @jofrom/design-system
+   tokens from the local clone (~/Jo_Design_System). Single Tailwind v4 entry. */
+@import "tailwindcss";
+
+/* Design-system foundation: TailAdmin @theme scales + semantic HSL tokens
+   (light + .dark) + base resets + utilities. */
+@import "../../Jo_Design_System/src/styles/tokens.css";
+@import "../../Jo_Design_System/src/styles/base.css";
+@import "../../Jo_Design_System/src/styles/utilities.css";
+
+/* Scan the DS source so its utility classes are generated. */
+@source "../../Jo_Design_System/src/**/*.{ts,tsx}";
+
+/* Bridge: register the DS semantic HSL tokens as Tailwind color utilities so
+   the prototype's semantic classes (bg-primary, bg-card, bg-sidebar, …) resolve
+   to the real DS tokens. DS components keep using the brand/gray scales. */
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  /* my components use bg-accent as a subtle grey hover, so bridge it to muted
+     (the DS `accent` semantic is brand-purple, used only by DS components). */
+  --color-accent: hsl(var(--muted));
+  --color-accent-foreground: hsl(var(--foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-info: hsl(var(--info));
+  --color-info-foreground: #ffffff;
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-active));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-active-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+}
+
+/* --info is not in the DS token set; add it (sky blue) for status badges. */
+:root { --info: 199 89% 48%; }
+.dark { --info: 199 89% 48%; }
