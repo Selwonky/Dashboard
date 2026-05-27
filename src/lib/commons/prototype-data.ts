@@ -157,17 +157,15 @@ export interface IndustryMatch {
   workAreas: string[];
 }
 
-// ── statusKind → Badge variant (object-card contract spec §2.2) ──
-export const statusVariant: Record<
-  StatusKind,
-  "secondary" | "info" | "outline" | "warning" | "destructive" | "success"
-> = {
-  neutral: "secondary",
-  in_progress: "info",
-  scheduled: "outline",
-  attention: "warning",
-  failed: "destructive",
-  done: "success",
+// ── statusKind → DS Badge (variant × color) ──
+export type DsBadgeColor = "brand" | "accent" | "success" | "warning" | "error" | "neutral";
+export const statusBadge: Record<StatusKind, { variant: "light" | "solid" | "outline"; color: DsBadgeColor }> = {
+  neutral: { variant: "light", color: "neutral" },
+  in_progress: { variant: "light", color: "brand" },
+  scheduled: { variant: "light", color: "accent" },
+  attention: { variant: "light", color: "warning" },
+  failed: { variant: "light", color: "error" },
+  done: { variant: "light", color: "success" },
 };
 
 export const actionStatusKind: Record<ActionStatus, StatusKind> = {

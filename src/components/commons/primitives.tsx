@@ -1,5 +1,8 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
+import { EmptyState as DsEmptyState, buttonVariants, buttonSizes } from "@jofrom/design-system/ui";
+import { cn } from "@/lib/utils";
 
 export function PageHeader({
   title,
@@ -13,9 +16,9 @@ export function PageHeader({
   return (
     <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
       <div className="min-w-0">
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{title}</h1>
         {description && (
-          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{description}</p>
+          <p className="mt-1 max-w-2xl text-theme-sm text-gray-500 dark:text-gray-400">{description}</p>
         )}
       </div>
       {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
@@ -35,7 +38,7 @@ export function Section({
   return (
     <section className="mb-8">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        <h2 className="text-theme-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
           {title}
         </h2>
         {action}
@@ -45,6 +48,7 @@ export function Section({
   );
 }
 
+/** Wraps the DS EmptyState but keeps the prototype's `icon: LucideIcon` API. */
 export function EmptyState({
   icon: Icon,
   title,
@@ -57,13 +61,40 @@ export function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-card/50 px-6 py-16 text-center">
-      <Icon className="size-10 text-muted-foreground/40" aria-hidden />
-      <h3 className="mt-4 text-base font-medium">{title}</h3>
-      {description && (
-        <p className="mt-1 max-w-sm text-sm text-muted-foreground">{description}</p>
+    <DsEmptyState
+      icon={<Icon className="h-8 w-8" aria-hidden />}
+      title={title}
+      description={description}
+      action={action}
+    />
+  );
+}
+
+/** A react-router Link styled as a DS Button (DS Button has no `asChild`). */
+export function ButtonLink({
+  to,
+  variant = "default",
+  size = "md",
+  className,
+  children,
+}: {
+  to: string;
+  variant?: keyof typeof buttonVariants;
+  size?: keyof typeof buttonSizes;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      to={to}
+      className={cn(
+        "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/15",
+        buttonVariants[variant],
+        variant !== "link" && buttonSizes[size],
+        className
       )}
-      {action && <div className="mt-4">{action}</div>}
-    </div>
+    >
+      {children}
+    </Link>
   );
 }

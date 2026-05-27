@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge";
-import { statusVariant, type StatusKind } from "@/lib/commons/prototype-data";
+import { Badge } from "@jofrom/design-system/ui";
+import { statusBadge, type StatusKind } from "@/lib/commons/prototype-data";
 
 export function StatusBadge({
   kind,
@@ -8,5 +8,10 @@ export function StatusBadge({
   kind: StatusKind;
   label: string;
 }) {
-  return <Badge variant={statusVariant[kind]}>{label}</Badge>;
+  const { variant, color } = statusBadge[kind];
+  return (
+    <Badge variant={variant} color={color} size="sm">
+      {label}
+    </Badge>
+  );
 }

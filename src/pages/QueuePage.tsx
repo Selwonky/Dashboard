@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@jofrom/design-system/ui";
 import { PageHeader, Section } from "@/components/commons/primitives";
 import { StatusBadge } from "@/components/commons/StatusBadge";
 import {
-  actionStatusKind, actionStatusLabel, deptLabel, statusVariant,
+  actionStatusKind, actionStatusLabel, deptLabel,
   type ActionStatus,
 } from "@/lib/commons/prototype-data";
 import { useCommons } from "@/lib/commons/store";
@@ -24,9 +23,7 @@ export function QueuePage() {
 
       <div className="mb-6 flex flex-wrap gap-2">
         {lifecycle.map((s) => (
-          <Badge key={s} variant={statusVariant[actionStatusKind[s]]}>
-            {actionStatusLabel[s]} · {queue.filter((q) => q.status === s).length}
-          </Badge>
+          <StatusBadge key={s} kind={actionStatusKind[s]} label={`${actionStatusLabel[s]} · ${queue.filter((q) => q.status === s).length}`} />
         ))}
       </div>
 
