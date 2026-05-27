@@ -1,18 +1,21 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { KanbanColumn, KanbanCard } from "@jofrom/design-system/data-display";
 import { PageHeader } from "@/components/commons/primitives";
 import { ObjectCard } from "@/components/commons/ObjectCard";
-import { workObjects, type StatusKind } from "@/lib/commons/prototype-data";
-
-const dotColor: Record<StatusKind, string> = {
-  attention: "bg-warning", in_progress: "bg-info", scheduled: "bg-muted-foreground/50",
-  neutral: "bg-secondary-foreground/40", done: "bg-success", failed: "bg-destructive",
-};
+import { workObjects, statusBadge, deptLabel, type StatusKind } from "@/lib/commons/prototype-data";
+import { getInitials } from "@/lib/utils";
 
 const typeTitle: Record<string, string> = {
   workflow: "Workflows", signal: "Signals", job: "Jobs", task: "Tasks",
   action: "Actions", block: "Blocks",
 };
 
+const dotClass: Record<StatusKind, string> = {
+  attention: "bg-warning-500", in_progress: "bg-brand-500", scheduled: "bg-accent-500",
+  neutral: "bg-gray-400", done: "bg-success-500", failed: "bg-error-500",
+};
+
+// 5 columns, one row (a kanban).
 const columns: { kind: StatusKind; label: string }[] = [
   { kind: "attention", label: "Needs you" },
   { kind: "in_progress", label: "In progress" },
@@ -23,7 +26,41 @@ const columns: { kind: StatusKind; label: string }[] = [
 
 export function ObjectsPage() {
   const { type } = useParams<{ type: string }>();
+  const navigate = useNavigate();
   const title = typeTitle[type ?? ""] ?? "Objects";
+
+  if (type === "block") {
+    return (
+      <>
+        <PageHeader
+          title="Blocks"
+          description="Every work object on one board, by status. Drag-and-drop is a later step; click a card to open it."
+        />
+        <div className="flex gap-4 overflow-x-auto pb-4">
+          {columns.map((col) => {
+            const items = workObjects.filter((o) => o.statusKind === col.kind);
+            return (
+              <KanbanColumn key={col.kind} title={col.label} count={items.length} dotClassName={dotClass[col.kind]} className="flex-1">
+                {items.map((o) => (
+                  <KanbanCard
+                    key={o.id}
+                    title={o.title}
+                    description={o.preview}
+                    tag={o.typeLabel}
+                    tagColor={statusBadge[o.statusKind].color}
+                    timestamp={o.dueAt}
+                    metadata={<span className="text-theme-xs text-gray-500 dark:text-gray-400">{deptLabel(o.department)}</span>}
+                    assignee={getInitials(o.owner.replace("Jo from ", ""))}
+                    onClick={() => navigate(`/commons/objects/detail/${o.id}`)}
+                  />
+                ))}
+              </KanbanColumn>
+            );
+          })}
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -38,9 +75,9 @@ export function ObjectsPage() {
           return (
             <div key={col.kind} className="space-y-3">
               <div className="flex items-center gap-2">
-                <span className={`size-2 rounded-full ${dotColor[col.kind]}`} />
-                <h2 className="text-sm font-semibold">{col.label}</h2>
-                <span className="text-xs text-muted-foreground">{items.length}</span>
+                <span className={`size-2 rounded-full ${dotClass[col.kind]}`} />
+                <h2 className="text-theme-sm font-semibold text-gray-900 dark:text-white">{col.label}</h2>
+                <span className="text-theme-xs text-gray-500">{items.length}</span>
               </div>
               {items.map((o) => <ObjectCard key={o.id} obj={o} />)}
             </div>

@@ -1,22 +1,16 @@
 import * as React from "react";
+import { useParams } from "react-router-dom";
 import { Boxes } from "lucide-react";
 import { Badge } from "@jofrom/design-system/ui";
 import { FilterTabs } from "@jofrom/design-system/data-display";
 import { PageHeader, EmptyState, ButtonLink } from "@/components/commons/primitives";
 import { ObjectCard } from "@/components/commons/ObjectCard";
-import { useParams } from "react-router-dom";
 import { deptIcon } from "@/lib/commons/navigation";
 import {
   departments, objectsByDept, type DepartmentId, type WorkObject,
 } from "@/lib/commons/prototype-data";
 
-// Sales is GTM: tabs are motions (Pipeline/Partnerships/Risk). Others use status views.
-const salesTabs = [
-  { value: "Pipeline", label: "Pipeline", blurb: "Find, qualify, and close new engagements." },
-  { value: "Partnerships", label: "Partnerships", blurb: "Referral partners, intros, and relationship check-ins." },
-  { value: "Risk", label: "Risk", blurb: "Insurance prospects, quote packages, and licensing." },
-] as const;
-
+// Every department (Sales included) uses the same status views.
 const statusTabs = [
   { value: "active", label: "Active" },
   { value: "approvals", label: "Needs approval" },
@@ -27,10 +21,9 @@ export function DepartmentPage() {
   const { dept } = useParams<{ dept: string }>();
   const meta = departments.find((d) => d.id === dept);
   const objs = objectsByDept(dept as DepartmentId);
-  const isSales = dept === "sales";
-  const [tab, setTab] = React.useState<string>(isSales ? "Pipeline" : "active");
+  const [tab, setTab] = React.useState<string>("active");
 
-  React.useEffect(() => { setTab(isSales ? "Pipeline" : "active"); }, [dept, isSales]);
+  React.useEffect(() => { setTab("active"); }, [dept]);
 
   if (!meta) {
     return <EmptyState icon={Boxes} title="Unknown department" description="This work area isn't part of the prototype yet." />;
@@ -49,14 +42,11 @@ export function DepartmentPage() {
     );
   }
 
-  const filtered: WorkObject[] = isSales
-    ? objs.filter((o) => (o.area ?? "Pipeline") === tab)
-    : tab === "approvals" ? objs.filter((o) => o.statusKind === "attention")
+  const filtered: WorkObject[] =
+    tab === "approvals" ? objs.filter((o) => o.statusKind === "attention")
     : tab === "recent" ? objs.filter((o) => o.statusKind === "done")
     : objs;
 
-  const tabs = isSales ? salesTabs : statusTabs;
-  const activeBlurb = isSales ? salesTabs.find((t) => t.value === tab)?.blurb : undefined;
   const Icon = deptIcon[meta.id];
 
   return (
@@ -71,11 +61,10 @@ export function DepartmentPage() {
           </>
         }
       />
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <FilterTabs tabs={tabs.map((t) => ({ label: t.label, value: t.value }))} activeTab={tab} onChange={setTab} />
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <FilterTabs tabs={statusTabs.map((t) => ({ label: t.label, value: t.value }))} activeTab={tab} onChange={setTab} />
         <ButtonLink to="/commons/orgchart" variant="ghost" size="sm">View in OrgChart</ButtonLink>
       </div>
-      {activeBlurb && <p className="mb-5 text-theme-sm text-gray-500 dark:text-gray-400">{activeBlurb}</p>}
 
       {filtered.length ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
