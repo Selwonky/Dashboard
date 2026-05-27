@@ -1,7 +1,14 @@
 # Jo from PLG — Commons Clickable Prototype · Build Output & Rubric Grade
 
 **Location:** `~/commons-preview` (local repo, not in `platform-plg-front` — built to fold in later).
-**Stack:** Vite + React 19 + TypeScript + Tailwind v4. Composes the **real shipped** `@/components/ui/*` (vendored verbatim from `platform-plg-mcp`) + two documented v4 deltas.
+**Stack:** Vite + React 19 + TypeScript + Tailwind v4. **Consumes the canonical `@jofrom/design-system`** (local clone `~/Jo_Design_System`, `Selwonky/Jo_Design_System`) from source — tokens, primitives, and domain components.
+
+## Design system consumption
+- **Tokens:** the prototype loads the DS's own `tokens.css`/`base.css`/`utilities.css` (TailAdmin Tailwind-v4 scale: `brand`=#0055ff, `gray`, `accent`=#9333ea, `success/warning/error`, `theme-*`, two-tone sidebar) via `src/styles.css`, with an `@theme` bridge mapping the DS semantic HSL tokens to color utilities.
+- **Components:** every page imports DS components — primitives (`Button/Card/Badge/Select/Dialog/Tooltip/Progress` + form `Input/Textarea/Label`) and domain components (`KPIGrid/StatCard`, `IntegrationCard`, `EntityHeader`, `ActivityTimeline`, `FilterTabs`).
+- **Vite** aliases `@jofrom/design-system/*` → the DS source and aliases shared deps (react/radix/lucide/…) to this app's `node_modules` (dedupe react). Build = `vite build` (esbuild transpiles DS source).
+- **Gaps filled locally** (not in the DS): `avatar`, `separator`, `sheet`, `stepper`. **Sonner** retained for toasts.
+- All local; nothing published.
 **Run:** `pnpm dev` → http://localhost:4321 · **Build:** `pnpm build` (passes, 1842 modules).
 **Scope:** Customer Zero, mock-data only. No backend, auth, billing, tokens, or live integrations.
 
