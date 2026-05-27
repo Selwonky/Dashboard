@@ -121,4 +121,6 @@ Shell (`CommonsShell`) wraps all `/commons/*`: left **Sidebar** (collapsible, mo
 ---
 
 ## 7. Intentionally NOT built (commercial hardening — later)
-Production auth/session · billing/entitlements · multi-user access · live Google/Corpus/Odoo/SAM.gov · provider-token storage · production deploy. A light/dark theme **toggle** is also not yet wired (renders light by default; both palettes are defined).
+Production auth/session · billing/entitlements · multi-user access · live Google/Corpus/Odoo/SAM.gov · provider-token storage · production deploy.
+
+*Light/dark theme toggle is wired* (sun/moon in the top bar; persists to `localStorage`, defaults light, applied pre-render to avoid flash).

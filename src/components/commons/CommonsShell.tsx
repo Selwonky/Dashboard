@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
-import { Search, Bell, PanelLeftClose, PanelLeft, Sparkles, Menu } from "lucide-react";
+import { Search, Bell, PanelLeftClose, PanelLeft, Sparkles, Menu, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/lib/commons/theme";
 import { navGroups } from "@/lib/commons/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -111,6 +112,7 @@ function TopBar({
   onOpenMobile: () => void;
 }) {
   const { pathname } = useLocation();
+  const { theme, toggle } = useTheme();
   const parts = pathname.split("/").filter(Boolean);
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur">
@@ -141,7 +143,17 @@ function TopBar({
         <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input inputSize="sm" placeholder="Search work…" className="pl-8" />
       </div>
-      <Button variant="ghost" size="icon-sm" aria-label="Notifications" className="ml-auto md:ml-0">
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        onClick={toggle}
+        className="ml-auto md:ml-0"
+        aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        title={theme === "dark" ? "Light mode" : "Dark mode"}
+      >
+        {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+      </Button>
+      <Button variant="ghost" size="icon-sm" aria-label="Notifications">
         <Bell className="size-4" />
       </Button>
       <Avatar size="sm">

@@ -479,6 +479,16 @@ html {
 }
 
 .dark {
+  /* Re-assert dark canvas/brand (the v4 :root block above is later in the
+     cascade than the base .dark, so these must be restated here to win). */
+  --background: oklch(0.16 0.02 264);   /* dark slate-blue canvas */
+  --foreground: oklch(0.97 0 0);
+  --card: oklch(0.21 0.02 264);
+  --card-foreground: oklch(0.97 0 0);
+  --primary: #3b82f6;                   /* Blue 500 — reads better on dark */
+  --primary-foreground: #ffffff;
+  --ring: #3b82f6;
+
   --info: #38bdf8;        --info-foreground: #06121b;
   --warning: #fbbf24;     --warning-foreground: #1a1206;
   --success: #22c55e;     --success-foreground: #04210f;
