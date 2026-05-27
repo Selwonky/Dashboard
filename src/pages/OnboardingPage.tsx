@@ -1,17 +1,12 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, Check, Star, Plus, Globe, ArrowRight, ArrowLeft, CircleCheck, Pencil } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardAction } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import {
+  Card, CardHeader, CardTitle, CardDescription, CardContent, Badge, Button, Progress,
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from "@/components/ui/select";
+} from "@jofrom/design-system/ui";
+import { Input, Label, Textarea } from "@jofrom/design-system/form";
+import { Separator } from "@/components/ui/separator";
 import { Stepper } from "@/components/ui/stepper";
 import { cn } from "@/lib/utils";
 import { industryMatches, moreIndustries, type IndustryMatch } from "@/lib/commons/prototype-data";
@@ -119,7 +114,7 @@ export function OnboardingPage() {
               )}
               {scanState === "done" && (
                 <div className="rounded-lg border bg-accent/40 p-4">
-                  <Badge variant="success"><Check className="size-3" /> Scan complete</Badge>
+                  <Badge variant="light" color="success" startIcon={<Check className="size-3" />}>Scan complete</Badge>
                   <p className="mt-2 text-sm font-medium">{company}</p>
                   <p className="text-sm text-muted-foreground">A precision-parts operation. We found 3 likely industry matches — confirm them in the next steps.</p>
                 </div>
@@ -308,9 +303,9 @@ export function OnboardingPage() {
             )}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <Card>
-                <CardHeader>
+                <CardHeader className="flex-row items-center justify-between">
                   <CardTitle className="text-base">Company &amp; Identity</CardTitle>
-                  <CardAction><EditLink to={1} /></CardAction>
+                  <EditLink to={1} />
                 </CardHeader>
                 <CardContent className="space-y-1 text-sm">
                   <p><span className="text-muted-foreground">Name:</span> {company || "—"}</p>
@@ -320,14 +315,14 @@ export function OnboardingPage() {
               </Card>
 
               <Card>
-                <CardHeader>
+                <CardHeader className="flex-row items-center justify-between">
                   <CardTitle className="text-base">Operations</CardTitle>
-                  <CardAction><EditLink to={2} /></CardAction>
+                  <EditLink to={2} />
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
                   <div className="flex flex-wrap gap-1.5">
                     {selected.length ? selected.map((m) => (
-                      <Badge key={m.id} variant={primary === m.id ? "default" : "secondary"}>{primary === m.id && <Star className="size-3" />}{m.label}</Badge>
+                      <Badge key={m.id} variant="light" color={primary === m.id ? "brand" : "neutral"} startIcon={primary === m.id ? <Star className="size-3" /> : undefined}>{m.label}</Badge>
                     )) : <span className="text-muted-foreground">No industries selected</span>}
                   </div>
                   <p><span className="text-muted-foreground">Company size:</span> {size || "—"}</p>
@@ -335,9 +330,9 @@ export function OnboardingPage() {
               </Card>
 
               <Card>
-                <CardHeader>
+                <CardHeader className="flex-row items-center justify-between">
                   <CardTitle className="text-base">Market</CardTitle>
-                  <CardAction><EditLink to={3} /></CardAction>
+                  <EditLink to={3} />
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
                   <p className="line-clamp-2"><span className="text-muted-foreground">Ideal customer:</span> {icp || "—"}</p>
@@ -352,13 +347,13 @@ export function OnboardingPage() {
               </Card>
 
               <Card>
-                <CardHeader>
+                <CardHeader className="flex-row items-center justify-between">
                   <CardTitle className="text-base">Tools &amp; Knowledge</CardTitle>
-                  <CardAction><EditLink to={4} /></CardAction>
+                  <EditLink to={4} />
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
                   {connected.length ? (
-                    <div className="flex flex-wrap gap-1.5">{connected.map((t) => <Badge key={t} variant="success"><Check className="size-3" />{t}</Badge>)}</div>
+                    <div className="flex flex-wrap gap-1.5">{connected.map((t) => <Badge key={t} variant="light" color="success" startIcon={<Check className="size-3" />}>{t}</Badge>)}</div>
                   ) : (
                     <p className="text-muted-foreground">No Tools connected yet — you can connect them anytime from Settings.</p>
                   )}

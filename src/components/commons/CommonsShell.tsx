@@ -3,10 +3,10 @@ import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
 import { Search, Bell, PanelLeftClose, PanelLeft, Sparkles, Menu, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/lib/commons/theme";
 import { navGroups } from "@/lib/commons/navigation";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@jofrom/design-system/form";
+import { Button } from "@jofrom/design-system/ui";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@jofrom/design-system/ui";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { useCommons } from "@/lib/commons/store";
@@ -61,7 +61,7 @@ function NavList({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
                     <Icon className="size-4 shrink-0" aria-hidden />
                     {!collapsed && <span className="truncate">{item.label}</span>}
                     {!collapsed && badge && (
-                      <Badge variant="info" className="ml-auto h-5 px-1.5">{badge}</Badge>
+                      <Badge variant="solid" color="brand" size="sm" className="ml-auto">{badge}</Badge>
                     )}
                   </NavLink>
                 </li>
@@ -116,10 +116,10 @@ function TopBar({
   const parts = pathname.split("/").filter(Boolean);
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur">
-      <Button variant="ghost" size="icon-sm" onClick={onOpenMobile} className="md:hidden" aria-label="Open menu">
+      <Button variant="ghost" size="icon" onClick={onOpenMobile} className="h-9 w-9 md:hidden" aria-label="Open menu">
         <Menu className="size-4" />
       </Button>
-      <Button variant="ghost" size="icon-sm" onClick={onToggle} className="hidden md:inline-flex" aria-label="Toggle sidebar">
+      <Button variant="ghost" size="icon" onClick={onToggle} className="hidden h-9 w-9 md:inline-flex" aria-label="Toggle sidebar">
         {collapsed ? <PanelLeft className="size-4" /> : <PanelLeftClose className="size-4" />}
       </Button>
       <nav aria-label="Breadcrumb" className="hidden items-center gap-1.5 text-sm text-muted-foreground sm:flex">
@@ -141,19 +141,19 @@ function TopBar({
       </nav>
       <div className="relative ml-auto hidden w-64 md:block">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input inputSize="sm" placeholder="Search work…" className="pl-8" />
+        <Input placeholder="Search work…" className="h-9 pl-8" />
       </div>
       <Button
         variant="ghost"
-        size="icon-sm"
+        size="icon"
         onClick={toggle}
-        className="ml-auto md:ml-0"
+        className="ml-auto h-9 w-9 md:ml-0"
         aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         title={theme === "dark" ? "Light mode" : "Dark mode"}
       >
         {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
       </Button>
-      <Button variant="ghost" size="icon-sm" aria-label="Notifications">
+      <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Notifications">
         <Bell className="size-4" />
       </Button>
       <Avatar size="sm">

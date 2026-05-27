@@ -1,13 +1,12 @@
 import * as React from "react";
 import { ChevronRight, Sparkles, FileCheck2 } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, Badge } from "@jofrom/design-system/ui";
 import { Separator } from "@/components/ui/separator";
 import { PageHeader } from "@/components/commons/primitives";
 import { cn } from "@/lib/utils";
 import { orgChart, type OrgJob } from "@/lib/commons/prototype-data";
 
-const levelVariant = { IC: "secondary", "Team Lead": "info", Manager: "warning", "Head of": "default" } as const;
+const levelColor = { IC: "neutral", "Team Lead": "brand", Manager: "warning", "Head of": "accent" } as const;
 
 export function OrgChartPage() {
   const [deptId, setDeptId] = React.useState(orgChart[0].id);
@@ -88,12 +87,12 @@ export function OrgChartPage() {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2 text-base">
                   <span className="min-w-0 truncate">{j.title}</span>
-                  <Badge variant={levelVariant[j.level]} className="shrink-0">{j.level}</Badge>
+                  <Badge variant="light" color={levelColor[j.level]} className="shrink-0">{j.level}</Badge>
                 </CardTitle>
                 <CardDescription>{j.subFamily}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-1.5">
-                {j.tasks.map((t) => <Badge key={t} variant="outline">{t}</Badge>)}
+                {j.tasks.map((t) => <Badge key={t} variant="outline" color="neutral" size="sm">{t}</Badge>)}
               </CardContent>
             </Card>
           ))}
@@ -141,7 +140,7 @@ export function OrgChartPage() {
                   <p className="mb-1.5 text-xs font-medium uppercase text-muted-foreground">Compiler Records</p>
                   <div className="flex flex-wrap gap-1.5">
                     {job.compilerRecords.map((c) => (
-                      <Badge key={c} variant="secondary"><FileCheck2 className="size-3" /> {c}</Badge>
+                      <Badge key={c} variant="light" color="brand" startIcon={<FileCheck2 className="size-3" />}>{c}</Badge>
                     ))}
                   </div>
                   <p className="mt-1.5 text-xs text-muted-foreground">Structured outputs this job produces — they appear in Recent.</p>

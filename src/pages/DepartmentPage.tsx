@@ -1,11 +1,10 @@
 import * as React from "react";
-import { useParams, Link } from "react-router-dom";
-import { Boxes, Handshake, Shield, TrendingUp } from "lucide-react";
-import { PageHeader, EmptyState } from "@/components/commons/primitives";
+import { Boxes } from "lucide-react";
+import { Badge } from "@jofrom/design-system/ui";
+import { FilterTabs } from "@jofrom/design-system/data-display";
+import { PageHeader, EmptyState, ButtonLink } from "@/components/commons/primitives";
 import { ObjectCard } from "@/components/commons/ObjectCard";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { useParams } from "react-router-dom";
 import { deptIcon } from "@/lib/commons/navigation";
 import {
   departments, objectsByDept, type DepartmentId, type WorkObject,
@@ -13,15 +12,15 @@ import {
 
 // Sales is GTM: tabs are motions (Pipeline/Partnerships/Risk). Others use status views.
 const salesTabs = [
-  { id: "Pipeline", label: "Pipeline", icon: TrendingUp, blurb: "Find, qualify, and close new engagements." },
-  { id: "Partnerships", label: "Partnerships", icon: Handshake, blurb: "Referral partners, intros, and relationship check-ins." },
-  { id: "Risk", label: "Risk", icon: Shield, blurb: "Insurance prospects, quote packages, and licensing." },
+  { value: "Pipeline", label: "Pipeline", blurb: "Find, qualify, and close new engagements." },
+  { value: "Partnerships", label: "Partnerships", blurb: "Referral partners, intros, and relationship check-ins." },
+  { value: "Risk", label: "Risk", blurb: "Insurance prospects, quote packages, and licensing." },
 ] as const;
 
 const statusTabs = [
-  { id: "active", label: "Active" },
-  { id: "approvals", label: "Needs approval" },
-  { id: "recent", label: "Recent" },
+  { value: "active", label: "Active" },
+  { value: "approvals", label: "Needs approval" },
+  { value: "recent", label: "Recent" },
 ] as const;
 
 export function DepartmentPage() {
@@ -57,7 +56,7 @@ export function DepartmentPage() {
     : objs;
 
   const tabs = isSales ? salesTabs : statusTabs;
-  const activeBlurb = isSales ? salesTabs.find((t) => t.id === tab)?.blurb : undefined;
+  const activeBlurb = isSales ? salesTabs.find((t) => t.value === tab)?.blurb : undefined;
   const Icon = deptIcon[meta.id];
 
   return (
@@ -67,36 +66,16 @@ export function DepartmentPage() {
         description={meta.summary}
         actions={
           <>
-            <Badge variant="secondary">{meta.activeCount} active</Badge>
-            {meta.needsApprovalCount > 0 && <Badge variant="warning">{meta.needsApprovalCount} approvals</Badge>}
+            <Badge variant="light" color="neutral">{meta.activeCount} active</Badge>
+            {meta.needsApprovalCount > 0 && <Badge variant="light" color="warning">{meta.needsApprovalCount} approvals</Badge>}
           </>
         }
       />
-      <div className="mb-2 flex flex-wrap items-center gap-1 border-b">
-        {tabs.map((t) => {
-          const TabIcon = "icon" in t ? t.icon : undefined;
-          return (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={cn(
-                "-mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors",
-                tab === t.id
-                  ? "border-primary font-medium text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {TabIcon && <TabIcon className="size-3.5" />}
-              {t.label}
-            </button>
-          );
-        })}
-        <Button asChild variant="ghost" size="sm" className="ml-auto">
-          <Link to="/commons/orgchart">View in OrgChart</Link>
-        </Button>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <FilterTabs tabs={tabs.map((t) => ({ label: t.label, value: t.value }))} activeTab={tab} onChange={setTab} />
+        <ButtonLink to="/commons/orgchart" variant="ghost" size="sm">View in OrgChart</ButtonLink>
       </div>
-      {activeBlurb && <p className="mb-5 text-sm text-muted-foreground">{activeBlurb}</p>}
-      {!activeBlurb && <div className="mb-5" />}
+      {activeBlurb && <p className="mb-5 text-theme-sm text-gray-500 dark:text-gray-400">{activeBlurb}</p>}
 
       {filtered.length ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">

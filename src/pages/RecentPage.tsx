@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@jofrom/design-system/ui";
 import { Separator } from "@/components/ui/separator";
 import { PageHeader } from "@/components/commons/primitives";
 import { StatusBadge } from "@/components/commons/StatusBadge";

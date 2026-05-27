@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import { Inbox, Compass, ArrowRight } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { PageHeader, Section } from "@/components/commons/primitives";
+import { Inbox, Compass, ArrowRight, ListChecks, Activity, History } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Badge } from "@jofrom/design-system/ui";
+import { KPIGrid } from "@jofrom/design-system/widgets";
+import { PageHeader, Section, ButtonLink } from "@/components/commons/primitives";
 import { ObjectCard } from "@/components/commons/ObjectCard";
 import { StatusBadge } from "@/components/commons/StatusBadge";
 import { deptIcon } from "@/lib/commons/navigation";
@@ -14,6 +13,7 @@ export function HomePage() {
   const { inbox, inboxState } = useCommons();
   const pending = inbox.filter((i) => inboxState[i.id] === "pending");
   const todays = workObjects.filter((o) => o.statusKind === "attention").slice(0, 3);
+  const richDepts = departments.filter((d) => d.rich);
 
   return (
     <>
@@ -22,15 +22,23 @@ export function HomePage() {
         description="Review approvals, track work, and see what Jo from has prepared across your company."
         actions={
           <>
-            <Button asChild variant="outline">
-              <Link to="/commons/orgchart"><Compass className="size-4" /> Maestro OrgChart</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/commons/inbox"><Inbox className="size-4" /> Review Inbox{pending.length ? ` (${pending.length})` : ""}</Link>
-            </Button>
+            <ButtonLink to="/commons/orgchart" variant="outline"><Compass className="size-4" /> Maestro OrgChart</ButtonLink>
+            <ButtonLink to="/commons/inbox"><Inbox className="size-4" /> Review Inbox{pending.length ? ` (${pending.length})` : ""}</ButtonLink>
           </>
         }
       />
+
+      <div className="mb-8">
+        <KPIGrid
+          columns={4}
+          items={[
+            { label: "Inbox needs you", value: pending.length, icon: <Inbox className="size-5" /> },
+            { label: "Active work", value: workObjects.length, icon: <Activity className="size-5" /> },
+            { label: "Departments", value: richDepts.length, icon: <ListChecks className="size-5" /> },
+            { label: "Recent outputs", value: outputs.length, icon: <History className="size-5" /> },
+          ]}
+        />
+      </div>
 
       <Section title="Today's work">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -40,57 +48,55 @@ export function HomePage() {
 
       <Section
         title="Inbox requiring you"
-        action={<Link to="/commons/inbox" className="text-sm font-medium text-primary hover:underline">View all →</Link>}
+        action={<Link to="/commons/inbox" className="text-theme-sm font-medium text-brand-600 hover:underline">View all →</Link>}
       >
-        <Card className="gap-0 py-0">
+        <Card className="overflow-hidden">
           {pending.slice(0, 4).map((item, i) => (
             <Link
               key={item.id}
               to="/commons/inbox"
-              className={`flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-accent ${i > 0 ? "border-t" : ""}`}
+              className={`flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-gray-50 dark:hover:bg-white/5 ${i > 0 ? "border-t border-gray-100 dark:border-gray-800" : ""}`}
             >
               <StatusBadge kind={item.statusKind} label={item.statusLabel} />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{item.title} · {item.objectTitle}</p>
-                <p className="truncate text-xs text-muted-foreground">{item.preview}</p>
+                <p className="truncate text-theme-sm font-medium text-gray-800 dark:text-gray-100">{item.title} · {item.objectTitle}</p>
+                <p className="truncate text-theme-xs text-gray-500 dark:text-gray-400">{item.preview}</p>
               </div>
-              <span className="shrink-0 text-xs text-muted-foreground">{item.dueAt}</span>
-              <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
+              <span className="shrink-0 text-theme-xs text-gray-500">{item.dueAt}</span>
+              <ArrowRight className="size-4 shrink-0 text-gray-400" />
             </Link>
           ))}
           {pending.length === 0 && (
-            <p className="px-5 py-6 text-center text-sm text-muted-foreground">
-              Nothing needs your review right now.
-            </p>
+            <p className="px-5 py-6 text-center text-theme-sm text-gray-500">Nothing needs your review right now.</p>
           )}
         </Card>
       </Section>
 
       <Section
         title="Work areas"
-        action={<Link to="/commons/departments/sales" className="text-sm font-medium text-primary hover:underline">All departments →</Link>}
+        action={<Link to="/commons/departments/sales" className="text-theme-sm font-medium text-brand-600 hover:underline">All departments →</Link>}
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {departments.filter((d) => d.rich).map((d) => {
+          {richDepts.map((d) => {
             const Icon = deptIcon[d.id];
             return (
-              <Card key={d.id} className="gap-3 transition-shadow hover:shadow-md">
+              <Card key={d.id} className="transition-shadow hover:shadow-theme-md">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <Icon className="size-4 text-muted-foreground" aria-hidden /> {d.label}
+                    <Icon className="size-4 text-gray-400" aria-hidden /> {d.label}
                   </CardTitle>
                   <CardDescription className="line-clamp-2">{d.summary}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex gap-2">
-                  <Badge variant="secondary">{d.activeCount} active</Badge>
+                  <Badge variant="light" color="neutral">{d.activeCount} active</Badge>
                   {d.needsApprovalCount > 0 && (
-                    <Badge variant="warning">{d.needsApprovalCount} approval{d.needsApprovalCount > 1 ? "s" : ""}</Badge>
+                    <Badge variant="light" color="warning">{d.needsApprovalCount} approval{d.needsApprovalCount > 1 ? "s" : ""}</Badge>
                   )}
                 </CardContent>
                 <CardFooter>
-                  <Button asChild variant="ghost" size="sm" className="ml-auto">
-                    <Link to={`/commons/departments/${d.id}`}>Open <ArrowRight className="size-3.5" /></Link>
-                  </Button>
+                  <ButtonLink to={`/commons/departments/${d.id}`} variant="ghost" size="sm" className="ml-auto">
+                    Open <ArrowRight className="size-3.5" />
+                  </ButtonLink>
                 </CardFooter>
               </Card>
             );
@@ -100,13 +106,13 @@ export function HomePage() {
 
       <Section
         title="Recent outputs"
-        action={<Link to="/commons/recent" className="text-sm font-medium text-primary hover:underline">View all →</Link>}
+        action={<Link to="/commons/recent" className="text-theme-sm font-medium text-brand-600 hover:underline">View all →</Link>}
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {outputs.slice(0, 3).map((o) => (
-            <Card key={o.id} className="gap-2">
+            <Card key={o.id}>
               <CardHeader>
-                <CardTitle className="text-sm">{o.title}</CardTitle>
+                <CardTitle className="text-theme-sm">{o.title}</CardTitle>
                 <CardDescription>{o.type} · {o.timestamp}</CardDescription>
               </CardHeader>
               <CardFooter>

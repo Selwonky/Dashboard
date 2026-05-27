@@ -1,15 +1,11 @@
 import * as React from "react";
 import { Check, Pencil, X, Inbox as InboxIcon, Loader2 } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@jofrom/design-system/ui";
+import { Textarea } from "@jofrom/design-system/form";
 import { Separator } from "@/components/ui/separator";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter,
 } from "@/components/ui/sheet";
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
-} from "@/components/ui/dialog";
 import { PageHeader, EmptyState } from "@/components/commons/primitives";
 import { StatusBadge } from "@/components/commons/StatusBadge";
 import { deptLabel, objectById, type InboxItem } from "@/lib/commons/prototype-data";
