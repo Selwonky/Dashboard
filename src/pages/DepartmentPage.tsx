@@ -14,7 +14,7 @@ import {
 const statusTabs = [
   { value: "active", label: "Active" },
   { value: "approvals", label: "Needs approval" },
-  { value: "recent", label: "Recent" },
+  { value: "done", label: "Done" },
 ] as const;
 
 export function DepartmentPage() {
@@ -44,7 +44,7 @@ export function DepartmentPage() {
 
   const filtered: WorkObject[] =
     tab === "approvals" ? objs.filter((o) => o.statusKind === "attention")
-    : tab === "recent" ? objs.filter((o) => o.statusKind === "done")
+    : tab === "done" ? objs.filter((o) => o.statusKind === "done")
     : objs;
 
   const Icon = deptIcon[meta.id];
