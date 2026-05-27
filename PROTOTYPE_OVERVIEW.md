@@ -99,22 +99,24 @@ Shell (`CommonsShell`) wraps all `/commons/*`: left **Sidebar** (collapsible, mo
 | 1 | Product Journey & Clickability | 15 | **15** |
 | 2 | Commons Object Model | 12 | **12** |
 | 3 | Department Coverage | 10 | **8** |
-| 4 | Onboarding Experience | 8 | **7** |
+| 4 | Onboarding Experience | 8 | **8** |
 | 5 | Inbox, Queue, Actions & State | 10 | **9** |
-| 6 | Maestro OrgChart Experience | 8 | **7** |
-| 7 | Tools / Security / Billing | 6 | **5** |
+| 6 | Maestro OrgChart Experience | 8 | **8** |
+| 7 | Tools / Security / Billing | 6 | **6** |
 | 8 | Visual System | 10 | **9** |
 | 9 | Icons, Buttons & States | 7 | **6** |
 | 10 | Copy & Product Language | 6 | **5** |
-| 11 | Responsive Behavior | 4 | **3** |
+| 11 | Responsive Behavior | 4 | **4** |
 | 12 | Prototype Integrity | 4 | **4** |
-| | **Total** | **100** | **90** |
+| | **Total** | **100** | **94** |
 
-**Deductions:** §3 Support/Accounting intentionally staged (Risk/Partnerships are GTM under Sales by direction); §4 Market/Review stages light; §6 orgchart data covers the 5 active families; §7 no per-tool "last synced"; §9 focus/active inherited; §10 a few generic helper lines; §11 OrgChart tight on small screens.
+**Resolved since v1 (90 → 94):** §4 Market stage now captures ICP/competitor chips/goal rows and Review reflects all entered data with Edit-to-stage links (+1); §6 OrgChart data covers all 9 departments with tasks, Workflow Seeds, and Compiler Records (+1); §7 per-connection "Synced …" / "Syncs continuously" added (+1); §11 OrgChart department selector is a horizontal-scroll chip strip on mobile, verified no page overflow at 390px (+1).
+
+**Remaining deductions:** §3 Support/Accounting intentionally staged (Risk/Partnerships are GTM under Sales by direction); §5 no undo on reject/edit; §8 a few dense areas; §9 focus/active states inherited from shadcn; §10 a few generic helper lines.
 
 **Critical-blocker check — all clear:** no Labor Map · no MCP (uses Tools) · no OAuth/RBAC (Security & Access) · no HR (Workforce) · no NAICS/backend keys/raw plumbing · no false "live" claims · mock-data usable · onboarding→Commons works · departments clickable & real · reads as The Commons.
 
-### Verdict: **Approved — 90 / 100, zero blockers.**
+### Verdict: **Approved — 94 / 100, zero blockers.**
 
 ---
 
