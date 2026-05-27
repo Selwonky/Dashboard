@@ -33,13 +33,19 @@ function ToolsSettings() {
                   </CardTitle>
                   <CardDescription>{t.why}</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-1.5">
                   {connected ? (
                     <Badge variant="success"><Check className="size-3" /> {t.note}</Badge>
                   ) : backend ? (
                     <Badge variant="secondary">{t.note}</Badge>
                   ) : (
                     <Badge variant="outline">{t.note}</Badge>
+                  )}
+                  {connected && (
+                    <p className="text-xs text-muted-foreground">Synced {t.lastSynced ?? "just now"}</p>
+                  )}
+                  {backend && (
+                    <p className="text-xs text-muted-foreground">Syncs continuously</p>
                   )}
                 </CardContent>
                 <CardFooter className="gap-2">

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, Check, Star, Plus, Globe, ArrowRight, ArrowLeft } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Sparkles, Check, Star, Plus, Globe, ArrowRight, ArrowLeft, CircleCheck, Pencil } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardAction } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,6 +39,29 @@ export function OnboardingPage() {
   const [selected, setSelected] = React.useState<IndustryMatch[]>([]);
   const [primary, setPrimary] = React.useState<string | null>(null);
   const [size, setSize] = React.useState("");
+
+  // Market
+  const [icp, setIcp] = React.useState("");
+  const [competitors, setCompetitors] = React.useState<string[]>([]);
+  const [competitorInput, setCompetitorInput] = React.useState("");
+  const [goals, setGoals] = React.useState<string[]>([]);
+  const [goalInput, setGoalInput] = React.useState("");
+
+  // Connect (Tools)
+  const [connected, setConnected] = React.useState<string[]>([]);
+  const toggleConnect = (t: string) =>
+    setConnected((c) => (c.includes(t) ? c.filter((x) => x !== t) : [...c, t]));
+
+  const addChip = (
+    value: string,
+    list: string[],
+    setList: (v: string[]) => void,
+    clear: () => void
+  ) => {
+    const v = value.trim();
+    if (v && !list.includes(v)) setList([...list, v]);
+    clear();
+  };
 
   const runScan = () => {
     setScanState("scanning");
@@ -198,9 +221,54 @@ export function OnboardingPage() {
       case 3:
         return (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Card><CardHeader><CardTitle className="text-base">Ideal customer</CardTitle></CardHeader><CardContent><Textarea placeholder="Who are your best customers?" /></CardContent></Card>
-            <Card><CardHeader><CardTitle className="text-base">Competitors</CardTitle></CardHeader><CardContent><Input placeholder="Add a competitor" /></CardContent></Card>
-            <Card className="md:col-span-2"><CardHeader><CardTitle className="text-base">Goals</CardTitle><CardDescription>What does success look like this year?</CardDescription></CardHeader><CardContent><Textarea placeholder="e.g. faster quote turnaround, 20% more pipeline" /></CardContent></Card>
+            <Card>
+              <CardHeader><CardTitle className="text-base">Ideal customer</CardTitle><CardDescription>Who Jo from should focus on.</CardDescription></CardHeader>
+              <CardContent><Textarea value={icp} onChange={(e) => setIcp(e.target.value)} placeholder="e.g. 50–250-person field-service operators in the Midwest" /></CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader><CardTitle className="text-base">Competitors</CardTitle><CardDescription>Who you come up against.</CardDescription></CardHeader>
+              <CardContent className="space-y-3">
+                <form
+                  className="flex gap-2"
+                  onSubmit={(e) => { e.preventDefault(); addChip(competitorInput, competitors, setCompetitors, () => setCompetitorInput("")); }}
+                >
+                  <Input value={competitorInput} onChange={(e) => setCompetitorInput(e.target.value)} placeholder="Add a competitor" />
+                  <Button type="submit" variant="outline" size="icon" aria-label="Add competitor"><Plus className="size-4" /></Button>
+                </form>
+                <div className="flex flex-wrap gap-1.5">
+                  {competitors.length === 0 && <span className="text-sm text-muted-foreground">None added yet.</span>}
+                  {competitors.map((c) => (
+                    <span key={c} className="flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-sm">
+                      {c}
+                      <button type="button" onClick={() => setCompetitors(competitors.filter((x) => x !== c))} className="text-muted-foreground hover:text-foreground" aria-label={`Remove ${c}`}>×</button>
+                    </span>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="md:col-span-2">
+              <CardHeader><CardTitle className="text-base">Goals</CardTitle><CardDescription>What success looks like this year — Jo from prioritizes work toward these.</CardDescription></CardHeader>
+              <CardContent className="space-y-3">
+                <form
+                  className="flex gap-2"
+                  onSubmit={(e) => { e.preventDefault(); addChip(goalInput, goals, setGoals, () => setGoalInput("")); }}
+                >
+                  <Input value={goalInput} onChange={(e) => setGoalInput(e.target.value)} placeholder="e.g. Cut quote turnaround to under 24h" />
+                  <Button type="submit" variant="outline">Add goal</Button>
+                </form>
+                <ul className="space-y-1.5">
+                  {goals.length === 0 && <li className="text-sm text-muted-foreground">Add a goal or two — e.g. "20% more qualified pipeline".</li>}
+                  {goals.map((g) => (
+                    <li key={g} className="flex items-center justify-between rounded-md border px-3 py-2 text-sm">
+                      <span className="flex items-center gap-2"><CircleCheck className="size-4 text-success" /> {g}</span>
+                      <button type="button" onClick={() => setGoals(goals.filter((x) => x !== g))} className="text-muted-foreground hover:text-foreground" aria-label={`Remove ${g}`}>×</button>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
           </div>
         );
       case 4:
@@ -208,34 +276,98 @@ export function OnboardingPage() {
           <Card>
             <CardHeader><CardTitle>Connect your Tools</CardTitle><CardDescription>Tools can be connected later. Jo from can still prepare work inside The Commons.</CardDescription></CardHeader>
             <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {["Google Drive", "Google Calendar", "Gmail", "Jira"].map((t) => (
-                <div key={t} className="flex items-center justify-between rounded-lg border p-3">
-                  <span className="text-sm font-medium">{t}</span>
-                  <Button size="sm" variant="outline">Connect</Button>
-                </div>
-              ))}
+              {["Google Drive", "Google Calendar", "Gmail", "Jira"].map((t) => {
+                const on = connected.includes(t);
+                return (
+                  <div key={t} className="flex items-center justify-between rounded-lg border p-3">
+                    <span className="flex items-center gap-2 text-sm font-medium">
+                      {on && <Check className="size-4 text-success" />}{t}
+                    </span>
+                    <Button size="sm" variant={on ? "outline" : "default"} onClick={() => toggleConnect(t)}>
+                      {on ? "Connected" : "Connect"}
+                    </Button>
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
         );
-      case 5:
+      case 5: {
+        const EditLink = ({ to }: { to: number }) => (
+          <Button variant="link" size="sm" className="h-auto p-0" onClick={() => setStep(to)}>
+            <Pencil className="size-3" /> Edit
+          </Button>
+        );
+        const missingPrimary = !primary;
         return (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Card><CardHeader><CardTitle className="text-base">Company &amp; Identity</CardTitle></CardHeader>
-              <CardContent className="space-y-1 text-sm">
-                <p><span className="text-muted-foreground">Name:</span> {company || "—"}</p>
-                <p><span className="text-muted-foreground">Tone:</span> {tone}</p>
-              </CardContent></Card>
-            <Card><CardHeader><CardTitle className="text-base">Operations</CardTitle></CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                <div className="flex flex-wrap gap-1.5">
-                  {selected.map((m) => <Badge key={m.id} variant={primary === m.id ? "default" : "secondary"}>{primary === m.id && <Star className="size-3" />}{m.label}</Badge>)}
-                </div>
-                <p><span className="text-muted-foreground">Size:</span> {size || "—"}</p>
-              </CardContent></Card>
-            <Card className="md:col-span-2"><CardHeader><CardTitle className="text-base">Tools &amp; Knowledge</CardTitle></CardHeader>
-              <CardContent className="text-sm text-muted-foreground">No Tools connected yet — you can connect them anytime from Settings.</CardContent></Card>
+          <div className="space-y-4">
+            {missingPrimary && (
+              <div className="flex items-center gap-2 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
+                <Star className="size-4 text-warning" /> Choose a primary industry in Operations before finishing.
+              </div>
+            )}
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Company &amp; Identity</CardTitle>
+                  <CardAction><EditLink to={1} /></CardAction>
+                </CardHeader>
+                <CardContent className="space-y-1 text-sm">
+                  <p><span className="text-muted-foreground">Name:</span> {company || "—"}</p>
+                  <p><span className="text-muted-foreground">Tone:</span> {tone}</p>
+                  <p className="line-clamp-2"><span className="text-muted-foreground">Mission:</span> {mission || "—"}</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Operations</CardTitle>
+                  <CardAction><EditLink to={2} /></CardAction>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                  <div className="flex flex-wrap gap-1.5">
+                    {selected.length ? selected.map((m) => (
+                      <Badge key={m.id} variant={primary === m.id ? "default" : "secondary"}>{primary === m.id && <Star className="size-3" />}{m.label}</Badge>
+                    )) : <span className="text-muted-foreground">No industries selected</span>}
+                  </div>
+                  <p><span className="text-muted-foreground">Company size:</span> {size || "—"}</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Market</CardTitle>
+                  <CardAction><EditLink to={3} /></CardAction>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                  <p className="line-clamp-2"><span className="text-muted-foreground">Ideal customer:</span> {icp || "—"}</p>
+                  <p><span className="text-muted-foreground">Competitors:</span> {competitors.length ? competitors.join(", ") : "—"}</p>
+                  <div>
+                    <span className="text-muted-foreground">Goals:</span>
+                    {goals.length ? (
+                      <ul className="mt-1 space-y-0.5">{goals.map((g) => <li key={g} className="flex items-center gap-1.5"><CircleCheck className="size-3.5 text-success" />{g}</li>)}</ul>
+                    ) : " —"}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Tools &amp; Knowledge</CardTitle>
+                  <CardAction><EditLink to={4} /></CardAction>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                  {connected.length ? (
+                    <div className="flex flex-wrap gap-1.5">{connected.map((t) => <Badge key={t} variant="success"><Check className="size-3" />{t}</Badge>)}</div>
+                  ) : (
+                    <p className="text-muted-foreground">No Tools connected yet — you can connect them anytime from Settings.</p>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </div>
         );
+      }
       case 6:
         return (
           <Card>

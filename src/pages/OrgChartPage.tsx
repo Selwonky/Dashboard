@@ -39,15 +39,31 @@ export function OrgChartPage() {
           </span>
         ))}
       </div>
-      <div className="grid gap-4 lg:grid-cols-[200px_1fr_1fr]">
-        {/* Departments */}
-        <Card className="h-fit gap-0 py-2">
+      {/* Departments — horizontal scroll chips on mobile */}
+      <div className="mb-4 -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 lg:hidden">
+        {orgChart.map((d) => (
+          <button
+            key={d.id}
+            onClick={() => selectDept(d.id)}
+            className={cn(
+              "shrink-0 rounded-full border px-3 py-1.5 text-sm transition-colors",
+              d.id === deptId ? "border-primary bg-primary text-primary-foreground" : "hover:bg-accent"
+            )}
+          >
+            {d.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[200px_1fr_1fr]">
+        {/* Departments — vertical list on desktop */}
+        <Card className="hidden h-fit gap-0 py-2 lg:block">
           {orgChart.map((d) => (
             <button
               key={d.id}
               onClick={() => selectDept(d.id)}
               className={cn(
-                "flex items-center justify-between px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent",
+                "flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent",
                 d.id === deptId && "bg-accent font-medium"
               )}
             >
@@ -71,8 +87,8 @@ export function OrgChartPage() {
             >
               <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2 text-base">
-                  {j.title}
-                  <Badge variant={levelVariant[j.level]}>{j.level}</Badge>
+                  <span className="min-w-0 truncate">{j.title}</span>
+                  <Badge variant={levelVariant[j.level]} className="shrink-0">{j.level}</Badge>
                 </CardTitle>
                 <CardDescription>{j.subFamily}</CardDescription>
               </CardHeader>

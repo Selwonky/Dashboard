@@ -147,6 +147,7 @@ export interface ToolConn {
   status: ToolStatus;
   note: string;
   why: string;
+  lastSynced?: string;
 }
 
 export interface IndustryMatch {
@@ -307,6 +308,19 @@ export const orgChart: OrgDepartment[] = [
   { id: "legal", label: "Legal", jobs: [
     { id: "legal_tl", title: "Legal Team Lead", level: "Team Lead", subFamily: "contracts", tasks: ["Draft contracts", "Review terms", "Track filings"], workflowSeeds: [{ name: "Statement of work", outputPreview: "A drafted SOW with scope, deliverables, and term." }], compilerRecords: ["Contract Draft", "Filing Record"] },
   ] },
+  { id: "workforce", label: "Workforce", jobs: [
+    { id: "wf_tl", title: "Workforce Team Lead", level: "Team Lead", subFamily: "people_ops", tasks: ["Onboard contractors", "Track agreements", "Coordinate the team"], workflowSeeds: [{ name: "Onboarding checklist", outputPreview: "A prepared onboarding checklist for a new contractor." }, { name: "Renewal reminder", outputPreview: "A heads-up that a contractor agreement renews soon." }], compilerRecords: ["Onboarding Checklist", "Agreement Record"] },
+  ] },
+  { id: "technology", label: "Technology", jobs: [
+    { id: "tech_tl", title: "Technology Team Lead", level: "Team Lead", subFamily: "build", tasks: ["Plan sprints", "Track tickets", "Watch tool health"], workflowSeeds: [{ name: "Sprint record", outputPreview: "A sprint summary with active items and blockers." }, { name: "Tool health report", outputPreview: "A weekly check on connected Tools." }], compilerRecords: ["Sprint Record", "Deployment Record", "Tool Health Report"] },
+    { id: "tech_ic", title: "Technology IC", level: "IC", subFamily: "delivery", tasks: ["Ship tickets", "Record deployments"], workflowSeeds: [{ name: "Deployment record", outputPreview: "A record of what shipped and when." }], compilerRecords: ["Deployment Record"] },
+  ] },
+  { id: "support", label: "Support", jobs: [
+    { id: "sup_tl", title: "Support Team Lead", level: "Team Lead", subFamily: "customer_care", tasks: ["Triage questions", "Draft replies", "Flag escalations"], workflowSeeds: [{ name: "Reply draft", outputPreview: "A drafted reply to a customer question, ready to review." }], compilerRecords: ["Reply Draft", "Escalation Note"] },
+  ] },
+  { id: "accounting", label: "Accounting", jobs: [
+    { id: "acct_tl", title: "Accounting Team Lead", level: "Team Lead", subFamily: "books", tasks: ["Reconcile accounts", "Prepare period close", "Categorize expenses"], workflowSeeds: [{ name: "Reconciliation summary", outputPreview: "A reconciliation summary flagging anything unmatched." }], compilerRecords: ["Reconciliation Summary", "Close Packet"] },
+  ] },
 ];
 
 // ─────────────────────────────── Tools ─────────────────────────────────────
@@ -314,8 +328,8 @@ export const tools: ToolConn[] = [
   { id: "drive", label: "Google Drive", status: "not_connected", note: "Not connected", why: "Lets Jo from read and organize documents you choose to share." },
   { id: "calendar", label: "Google Calendar", status: "not_connected", note: "Not connected", why: "Lets Jo from see availability and schedule kickoff calls." },
   { id: "gmail", label: "Gmail", status: "not_connected", note: "Not connected", why: "Lets Jo from prepare and send approved emails on your behalf." },
-  { id: "jira", label: "Jira", status: "connected", note: "Connected for Customer Zero", why: "Tracks Technology work for the Jo from team." },
-  { id: "corpus", label: "Document workspace", status: "backend", note: "Connected by your workspace", why: "Managed for you — no action needed." },
+  { id: "jira", label: "Jira", status: "connected", note: "Connected for Customer Zero", why: "Tracks Technology work for the Jo from team.", lastSynced: "2h ago" },
+  { id: "corpus", label: "Document workspace", status: "backend", note: "Connected by your workspace", why: "Managed for you — no action needed.", lastSynced: "live" },
 ];
 
 // ─────────────────────────────── Industry matches (onboarding) ─────────────
