@@ -19,14 +19,65 @@ const statusTabs = [
 ] as const;
 
 // Department-specific category tabs (on top of the consistent status tabs).
-// Add an entry per department as needed; `all` = first/default, no type filter.
+// Each rich department gets 6 tabs: 5 dept-specific + the shared "Reporting".
 type Category = { value: string; label: string; types?: ObjectType[] };
+const reporting: Category = { value: "reporting", label: "Reporting", types: ["status_report"] };
 const deptCategories: Partial<Record<DepartmentId, Category[]>> = {
+  sales: [
+    { value: "pipeline", label: "Pipeline", types: ["prospect", "research_brief"] },
+    { value: "outreach", label: "Outreach", types: ["outreach_draft", "proposal"] },
+    { value: "partnerships", label: "Partnerships", types: ["partner", "referral", "checkin"] },
+    { value: "risk", label: "Risk", types: ["insurance_prospect", "quote_package", "assessment", "licensing"] },
+    { value: "forecast", label: "Forecast" },
+    reporting,
+  ],
   marketing: [
-    { value: "all", label: "Content Calendar" },
-    { value: "drafts", label: "Drafts", types: ["content_draft"] },
+    { value: "content", label: "Content", types: ["content_draft"] },
+    { value: "calendar", label: "Calendar" },
     { value: "campaigns", label: "Campaigns", types: ["campaign"] },
-    { value: "performance", label: "Performance", types: ["status_report"] },
+    { value: "seo", label: "SEO/AEO" },
+    { value: "performance", label: "Performance" },
+    reporting,
+  ],
+  operations: [
+    { value: "engagements", label: "Engagements", types: ["engagement"] },
+    { value: "onboarding", label: "Onboarding", types: ["checklist"] },
+    { value: "deliverables", label: "Deliverables" },
+    { value: "escalations", label: "Escalations" },
+    { value: "health", label: "Health" },
+    reporting,
+  ],
+  finance: [
+    { value: "invoices", label: "Invoices", types: ["invoice"] },
+    { value: "cashflow", label: "Cash Flow" },
+    { value: "collections", label: "Collections" },
+    { value: "grants", label: "Grants" },
+    { value: "budgets", label: "Budgets" },
+    reporting,
+  ],
+  workforce: [
+    { value: "people", label: "People" },
+    { value: "contractors", label: "Contractors", types: ["agreement"] },
+    { value: "onboarding", label: "Onboarding", types: ["checklist"] },
+    { value: "agreements", label: "Agreements", types: ["agreement"] },
+    { value: "payments", label: "Payments" },
+    reporting,
+  ],
+  technology: [
+    { value: "sprints", label: "Sprints", types: ["sprint"] },
+    { value: "tickets", label: "Tickets", types: ["ticket"] },
+    { value: "deployments", label: "Deployments" },
+    { value: "health", label: "Tool Health" },
+    { value: "roadmap", label: "Roadmap" },
+    reporting,
+  ],
+  legal: [
+    { value: "contracts", label: "Contracts", types: ["contract"] },
+    { value: "filings", label: "Filings" },
+    { value: "ip", label: "IP" },
+    { value: "compliance", label: "Compliance" },
+    { value: "signatures", label: "Signatures" },
+    reporting,
   ],
 };
 
