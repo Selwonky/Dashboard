@@ -2,7 +2,8 @@ import * as React from "react";
 import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
 import { Search, Bell, PanelLeftClose, PanelLeft, Sparkles, Menu, Sun, Moon, Mail, Calendar, ListChecks, StickyNote } from "lucide-react";
 import { useTheme } from "@/lib/theme";
-import { navGroups } from "@/lib/navigation";
+import { navGroups, deptCategories } from "@/lib/navigation";
+import type { DepartmentId } from "@/lib/prototype-data";
 import { Input } from "@jofrom/design-system/form";
 import { Button } from "@jofrom/design-system/ui";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -115,9 +116,15 @@ const crumbLabels: Record<string, string> = {
 };
 
 function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const { theme, toggle } = useTheme();
   const parts = pathname.split("/").filter(Boolean);
+  const deptId = parts[0] === "departments" ? (parts[1] as DepartmentId | undefined) : undefined;
+  const deptCats = deptId ? deptCategories[deptId] : undefined;
+  const currentCat = new URLSearchParams(search).get("cat") ?? deptCats?.[0].value;
+  const Divider = () => (
+    <span aria-hidden className="mx-1 hidden h-5 w-px shrink-0 bg-muted-foreground/20 md:inline-block" />
+  );
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur">
       <Button variant="ghost" size="icon" onClick={onOpenMobile} className="h-9 w-9 md:hidden" aria-label="Open menu">
@@ -140,9 +147,12 @@ function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
         );
       })()}
 
-      {/* Excel-style ribbon tabs right next to the page indicator.
+      {/* Divider between page indicator and the consistent tools. */}
+      <Divider />
+
+      {/* Consistent global tools: Email · Calendar · Tasks · Notes.
           Wide: words only. Narrow: icons only. */}
-      <div className="ml-2 hidden items-center gap-1 md:flex">
+      <div className="hidden items-center gap-1 md:flex">
         <Button variant="ghost" size="sm" aria-label="Email" title="Email">
           <Mail className="size-4 lg:hidden" />
           <span className="hidden lg:inline">Email</span>
@@ -160,6 +170,30 @@ function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
           <span className="hidden lg:inline">Notes</span>
         </Button>
       </div>
+
+      {/* Divider + the 6 dept-specific tabs (when on a department page). */}
+      {deptCats && (
+        <>
+          <Divider />
+          <nav aria-label="Department views" className="hidden min-w-0 items-center gap-1 overflow-x-auto md:flex">
+            {deptCats.map((c) => {
+              const active = c.value === currentCat;
+              return (
+                <Link
+                  key={c.value}
+                  to={`/departments/${deptId}?cat=${c.value}`}
+                  className={cn(
+                    "shrink-0 rounded-md px-2 py-1 text-sm transition-colors",
+                    active ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {c.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </>
+      )}
 
       <div className="relative ml-auto hidden w-64 md:block">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
