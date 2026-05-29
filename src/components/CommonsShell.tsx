@@ -140,19 +140,20 @@ function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
         );
       })()}
 
-      {/* Consistent global tools: Email · Calendar · Tasks · Notes. */}
+      {/* Consistent global tools: Email · Calendar · Tasks · Notes.
+          Label collapses to icon-only when the browser is narrow. */}
       <div className="ml-2 hidden items-center gap-1 md:flex">
-        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Email" title="Email">
-          <Mail className="size-4" />
+        <Button variant="ghost" size="sm" aria-label="Email" title="Email">
+          <Mail className="size-4" /><span className="hidden lg:inline">Email</span>
         </Button>
-        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Calendar" title="Calendar">
-          <Calendar className="size-4" />
+        <Button variant="ghost" size="sm" aria-label="Calendar" title="Calendar">
+          <Calendar className="size-4" /><span className="hidden lg:inline">Calendar</span>
         </Button>
-        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Tasks" title="Tasks">
-          <ListChecks className="size-4" />
+        <Button variant="ghost" size="sm" aria-label="Tasks" title="Tasks">
+          <ListChecks className="size-4" /><span className="hidden lg:inline">Tasks</span>
         </Button>
-        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Notes" title="Notes">
-          <StickyNote className="size-4" />
+        <Button variant="ghost" size="sm" aria-label="Notes" title="Notes">
+          <StickyNote className="size-4" /><span className="hidden lg:inline">Notes</span>
         </Button>
       </div>
 
