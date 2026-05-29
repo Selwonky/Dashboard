@@ -7,23 +7,42 @@ import { PageHeader, EmptyState, ButtonLink } from "@/components/commons/primiti
 import { ObjectCard } from "@/components/commons/ObjectCard";
 import { deptIcon } from "@/lib/commons/navigation";
 import {
-  departments, objectsByDept, type DepartmentId, type WorkObject,
+  departments, objectsByDept,
+  type DepartmentId, type ObjectType, type WorkObject,
 } from "@/lib/commons/prototype-data";
 
-// Every department (Sales included) uses the same status views.
+// Consistent across every department.
 const statusTabs = [
   { value: "active", label: "Active" },
   { value: "approvals", label: "Needs approval" },
   { value: "done", label: "Done" },
 ] as const;
 
+// Department-specific category tabs (on top of the consistent status tabs).
+// Add an entry per department as needed; `all` = first/default, no type filter.
+type Category = { value: string; label: string; types?: ObjectType[] };
+const deptCategories: Partial<Record<DepartmentId, Category[]>> = {
+  marketing: [
+    { value: "all", label: "Content Calendar" },
+    { value: "drafts", label: "Drafts", types: ["content_draft"] },
+    { value: "campaigns", label: "Campaigns", types: ["campaign"] },
+    { value: "performance", label: "Performance", types: ["status_report"] },
+  ],
+};
+
 export function DepartmentPage() {
   const { dept } = useParams<{ dept: string }>();
   const meta = departments.find((d) => d.id === dept);
   const objs = objectsByDept(dept as DepartmentId);
-  const [tab, setTab] = React.useState<string>("active");
+  const categories = deptCategories[dept as DepartmentId];
 
-  React.useEffect(() => { setTab("active"); }, [dept]);
+  const [status, setStatus] = React.useState<string>("active");
+  const [category, setCategory] = React.useState<string>(categories?.[0].value ?? "all");
+
+  React.useEffect(() => {
+    setStatus("active");
+    setCategory(categories?.[0].value ?? "all");
+  }, [dept, categories]);
 
   if (!meta) {
     return <EmptyState icon={Boxes} title="Unknown department" description="This work area isn't part of the prototype yet." />;
@@ -42,10 +61,14 @@ export function DepartmentPage() {
     );
   }
 
-  const filtered: WorkObject[] =
-    tab === "approvals" ? objs.filter((o) => o.statusKind === "attention")
-    : tab === "done" ? objs.filter((o) => o.statusKind === "done")
+  const activeCategory = categories?.find((c) => c.value === category);
+  const byCategory = activeCategory?.types
+    ? objs.filter((o) => activeCategory.types!.includes(o.type))
     : objs;
+  const filtered: WorkObject[] =
+    status === "approvals" ? byCategory.filter((o) => o.statusKind === "attention")
+    : status === "done" ? byCategory.filter((o) => o.statusKind === "done")
+    : byCategory;
 
   const Icon = deptIcon[meta.id];
 
@@ -61,10 +84,27 @@ export function DepartmentPage() {
           </>
         }
       />
-      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <FilterTabs tabs={statusTabs.map((t) => ({ label: t.label, value: t.value }))} activeTab={tab} onChange={setTab} />
+
+      {/* Consistent status tabs (every department). */}
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <FilterTabs
+          tabs={statusTabs.map((t) => ({ label: t.label, value: t.value }))}
+          activeTab={status}
+          onChange={setStatus}
+        />
         <ButtonLink to="/commons/orgchart" variant="ghost" size="sm">View in OrgChart</ButtonLink>
       </div>
+
+      {/* Department-specific category tabs (only where defined). */}
+      {categories && (
+        <div className="mb-5">
+          <FilterTabs
+            tabs={categories.map((c) => ({ label: c.label, value: c.value }))}
+            activeTab={category}
+            onChange={setCategory}
+          />
+        </div>
+      )}
 
       {filtered.length ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
