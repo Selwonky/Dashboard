@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { KanbanColumn, KanbanCard } from "@jofrom/design-system/data-display";
-import { PageHeader } from "@/components/commons/primitives";
-import { workObjects, statusBadge, deptLabel, type StatusKind } from "@/lib/commons/prototype-data";
+import { PageHeader } from "@/components/primitives";
+import { workObjects, statusBadge, deptLabel, type StatusKind } from "@/lib/prototype-data";
 import { getInitials } from "@/lib/utils";
 
 const typeTitle: Record<string, string> = {

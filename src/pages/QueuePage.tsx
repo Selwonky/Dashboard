@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { Card } from "@jofrom/design-system/ui";
-import { PageHeader, Section } from "@/components/commons/primitives";
-import { StatusBadge } from "@/components/commons/StatusBadge";
+import { PageHeader, Section } from "@/components/primitives";
+import { StatusBadge } from "@/components/StatusBadge";
 import {
   actionStatusKind, actionStatusLabel, deptLabel,
   type ActionStatus,
-} from "@/lib/commons/prototype-data";
-import { useCommons } from "@/lib/commons/store";
+} from "@/lib/prototype-data";
+import { useCommons } from "@/lib/store";
 
 const lifecycle: ActionStatus[] = [
   "draft", "queued", "running", "needs_approval", "completed", "failed", "cancelled",
@@ -46,7 +46,7 @@ export function QueuePage() {
                     </p>
                   </div>
                   {a.status === "needs_approval" && (
-                    <Link to="/commons/inbox" className="shrink-0 text-sm font-medium text-primary hover:underline">Review →</Link>
+                    <Link to="/inbox" className="shrink-0 text-sm font-medium text-primary hover:underline">Review →</Link>
                   )}
                 </div>
               ))}

@@ -2,9 +2,9 @@ import { useParams } from "react-router-dom";
 import { Shield, CreditCard, Compass, Plug, Check } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Badge, Button } from "@jofrom/design-system/ui";
 import { IntegrationCard } from "@jofrom/design-system/data-display";
-import { PageHeader, EmptyState } from "@/components/commons/primitives";
-import { tools } from "@/lib/commons/prototype-data";
-import { useCommons } from "@/lib/commons/store";
+import { PageHeader, EmptyState } from "@/components/primitives";
+import { tools } from "@/lib/prototype-data";
+import { useCommons } from "@/lib/store";
 
 function ToolsSettings() {
   const { toolState, toggleTool } = useCommons();

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
-import { CommonsProvider } from "@/lib/commons/store";
-import { CommonsShell } from "@/components/commons/CommonsShell";
+import { CommonsProvider } from "@/lib/store";
+import { CommonsShell } from "@/components/CommonsShell";
 import { WelcomePage } from "@/pages/WelcomePage";
 import { OnboardingPage } from "@/pages/OnboardingPage";
 import { HomePage } from "@/pages/HomePage";
@@ -20,20 +20,25 @@ export default function App() {
       <Toaster position="bottom-right" richColors closeButton />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<WelcomePage />} />
+          {/* Entry points (no shell). */}
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/onboarding" element={<OnboardingPage />} />
-          <Route path="/commons" element={<CommonsShell />}>
-            <Route index element={<HomePage />} />
-            <Route path="inbox" element={<InboxPage />} />
-            <Route path="queue" element={<QueuePage />} />
-            <Route path="recent" element={<RecentPage />} />
-            <Route path="orgchart" element={<OrgChartPage />} />
-            <Route path="objects/detail/:id" element={<ObjectDetailPage />} />
-            <Route path="objects/:type" element={<ObjectsPage />} />
-            <Route path="departments/:dept" element={<DepartmentPage />} />
-            <Route path="settings/:setting" element={<SettingsPage />} />
+
+          {/* Every workspace page lives at /{page} under the Commons shell. */}
+          <Route element={<CommonsShell />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/inbox" element={<InboxPage />} />
+            <Route path="/queue" element={<QueuePage />} />
+            <Route path="/recent" element={<RecentPage />} />
+            <Route path="/orgchart" element={<OrgChartPage />} />
+            <Route path="/objects/detail/:id" element={<ObjectDetailPage />} />
+            <Route path="/objects/:type" element={<ObjectsPage />} />
+            <Route path="/departments/:dept" element={<DepartmentPage />} />
+            <Route path="/settings/:setting" element={<SettingsPage />} />
           </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
+
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </BrowserRouter>
     </CommonsProvider>

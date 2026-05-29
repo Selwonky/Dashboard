@@ -9,7 +9,7 @@ import { Input, Label, Textarea } from "@jofrom/design-system/form";
 import { Separator } from "@/components/ui/separator";
 import { Stepper } from "@/components/ui/stepper";
 import { cn } from "@/lib/utils";
-import { industryMatches, moreIndustries, type IndustryMatch } from "@/lib/commons/prototype-data";
+import { industryMatches, moreIndustries, type IndustryMatch } from "@/lib/prototype-data";
 
 const steps = [
   { label: "Scan" }, { label: "Identity" }, { label: "Operations" },
@@ -372,7 +372,7 @@ export function OnboardingPage() {
                 <h2 className="text-xl font-semibold">You're all set.</h2>
                 <p className="mt-1 text-muted-foreground">We'll set up your workspace and show the right work areas.</p>
               </div>
-              <Button size="lg" className="bg-gradient-to-br from-primary to-[#9333ea] text-white hover:opacity-90" onClick={() => navigate("/commons")}>
+              <Button size="lg" className="bg-gradient-to-br from-primary to-[#9333ea] text-white hover:opacity-90" onClick={() => navigate("/home")}>
                 Enter The Commons <ArrowRight className="size-4" />
               </Button>
             </CardContent>

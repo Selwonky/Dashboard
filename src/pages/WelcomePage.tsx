@@ -1,5 +1,5 @@
 import { Sparkles, ArrowRight } from "lucide-react";
-import { ButtonLink } from "@/components/commons/primitives";
+import { ButtonLink } from "@/components/primitives";
 
 export function WelcomePage() {
   return (
@@ -19,7 +19,7 @@ export function WelcomePage() {
         <ButtonLink to="/onboarding" size="lg" className="brand-gradient text-white hover:opacity-90">
           Start onboarding <ArrowRight className="size-4" />
         </ButtonLink>
-        <ButtonLink to="/commons" size="lg" variant="outline">
+        <ButtonLink to="/home" size="lg" variant="outline">
           Enter The Commons
         </ButtonLink>
       </div>

@@ -6,10 +6,10 @@ import { Separator } from "@/components/ui/separator";
 import {
   Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter,
 } from "@/components/ui/sheet";
-import { PageHeader, EmptyState } from "@/components/commons/primitives";
-import { StatusBadge } from "@/components/commons/StatusBadge";
-import { deptLabel, objectById, type InboxItem } from "@/lib/commons/prototype-data";
-import { useCommons } from "@/lib/commons/store";
+import { PageHeader, EmptyState } from "@/components/primitives";
+import { StatusBadge } from "@/components/StatusBadge";
+import { deptLabel, objectById, type InboxItem } from "@/lib/prototype-data";
+import { useCommons } from "@/lib/store";
 
 export function InboxPage() {
   const { inbox, inboxState, edits, rejectReasons, approve, reject, saveEdit } = useCommons();

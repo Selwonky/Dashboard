@@ -1,5 +1,5 @@
 import { Badge } from "@jofrom/design-system/ui";
-import { statusBadge, type StatusKind } from "@/lib/commons/prototype-data";
+import { statusBadge, type StatusKind } from "@/lib/prototype-data";
 
 export function StatusBadge({
   kind,

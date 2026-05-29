@@ -2,9 +2,9 @@ import * as React from "react";
 import { ChevronRight, Sparkles, FileCheck2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, Badge } from "@jofrom/design-system/ui";
 import { Separator } from "@/components/ui/separator";
-import { PageHeader } from "@/components/commons/primitives";
+import { PageHeader } from "@/components/primitives";
 import { cn } from "@/lib/utils";
-import { orgChart, type OrgJob } from "@/lib/commons/prototype-data";
+import { orgChart, type OrgJob } from "@/lib/prototype-data";
 
 const levelColor = { IC: "neutral", "Team Lead": "brand", Manager: "warning", "Head of": "accent" } as const;
 

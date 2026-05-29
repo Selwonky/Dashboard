@@ -2,8 +2,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Boxes } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, Button } from "@jofrom/design-system/ui";
 import { EntityHeader, ActivityTimeline } from "@jofrom/design-system/data-display";
-import { EmptyState } from "@/components/commons/primitives";
-import { objectById, deptLabel, statusBadge, type StatusKind } from "@/lib/commons/prototype-data";
+import { EmptyState } from "@/components/primitives";
+import { objectById, deptLabel, statusBadge, type StatusKind } from "@/lib/prototype-data";
 
 const timelineStatus: Record<StatusKind, "success" | "warning" | "error" | "info" | "neutral"> = {
   done: "success", attention: "warning", failed: "error", in_progress: "info", scheduled: "info", neutral: "neutral",

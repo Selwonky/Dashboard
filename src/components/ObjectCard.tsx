@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { StatusBadge } from "./StatusBadge";
 import { ButtonLink } from "./primitives";
 import { getInitials } from "@/lib/utils";
-import { deptLabel, type ObjectType, type WorkObject } from "@/lib/commons/prototype-data";
+import { deptLabel, type ObjectType, type WorkObject } from "@/lib/prototype-data";
 
 const typeGlyph: Partial<Record<ObjectType, LucideIcon>> = {
   workflow: Workflow, signal: Radio, engagement: Briefcase, task: CircleCheck,

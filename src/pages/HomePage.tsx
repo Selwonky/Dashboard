@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import { Inbox, Compass, ArrowRight, ListChecks, Activity, History } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Badge } from "@jofrom/design-system/ui";
 import { KPIGrid } from "@jofrom/design-system/widgets";
-import { PageHeader, Section, ButtonLink } from "@/components/commons/primitives";
-import { ObjectCard } from "@/components/commons/ObjectCard";
-import { StatusBadge } from "@/components/commons/StatusBadge";
-import { deptIcon } from "@/lib/commons/navigation";
-import { departments, workObjects, outputs } from "@/lib/commons/prototype-data";
-import { useCommons } from "@/lib/commons/store";
+import { PageHeader, Section, ButtonLink } from "@/components/primitives";
+import { ObjectCard } from "@/components/ObjectCard";
+import { StatusBadge } from "@/components/StatusBadge";
+import { deptIcon } from "@/lib/navigation";
+import { departments, workObjects, outputs } from "@/lib/prototype-data";
+import { useCommons } from "@/lib/store";
 
 export function HomePage() {
   const { inbox, inboxState } = useCommons();
@@ -22,8 +22,8 @@ export function HomePage() {
         description="Review approvals, track work, and see what Jo from has prepared across your company."
         actions={
           <>
-            <ButtonLink to="/commons/orgchart" variant="outline"><Compass className="size-4" /> Maestro OrgChart</ButtonLink>
-            <ButtonLink to="/commons/inbox"><Inbox className="size-4" /> Review Inbox{pending.length ? ` (${pending.length})` : ""}</ButtonLink>
+            <ButtonLink to="/orgchart" variant="outline"><Compass className="size-4" /> Maestro OrgChart</ButtonLink>
+            <ButtonLink to="/inbox"><Inbox className="size-4" /> Review Inbox{pending.length ? ` (${pending.length})` : ""}</ButtonLink>
           </>
         }
       />
@@ -48,13 +48,13 @@ export function HomePage() {
 
       <Section
         title="Inbox requiring you"
-        action={<Link to="/commons/inbox" className="text-theme-sm font-medium text-brand-600 hover:underline">View all →</Link>}
+        action={<Link to="/inbox" className="text-theme-sm font-medium text-brand-600 hover:underline">View all →</Link>}
       >
         <Card className="overflow-hidden">
           {pending.slice(0, 4).map((item, i) => (
             <Link
               key={item.id}
-              to="/commons/inbox"
+              to="/inbox"
               className={`flex items-center gap-3 px-5 py-3.5 transition-colors hover:bg-gray-50 dark:hover:bg-white/5 ${i > 0 ? "border-t border-gray-100 dark:border-gray-800" : ""}`}
             >
               <StatusBadge kind={item.statusKind} label={item.statusLabel} />
@@ -74,7 +74,7 @@ export function HomePage() {
 
       <Section
         title="Work areas"
-        action={<Link to="/commons/departments/sales" className="text-theme-sm font-medium text-brand-600 hover:underline">All departments →</Link>}
+        action={<Link to="/departments/sales" className="text-theme-sm font-medium text-brand-600 hover:underline">All departments →</Link>}
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {richDepts.map((d) => {
@@ -94,7 +94,7 @@ export function HomePage() {
                   )}
                 </CardContent>
                 <CardFooter>
-                  <ButtonLink to={`/commons/departments/${d.id}`} variant="ghost" size="sm" className="ml-auto">
+                  <ButtonLink to={`/departments/${d.id}`} variant="ghost" size="sm" className="ml-auto">
                     Open <ArrowRight className="size-3.5" />
                   </ButtonLink>
                 </CardFooter>
@@ -106,7 +106,7 @@ export function HomePage() {
 
       <Section
         title="Recent outputs"
-        action={<Link to="/commons/recent" className="text-theme-sm font-medium text-brand-600 hover:underline">View all →</Link>}
+        action={<Link to="/recent" className="text-theme-sm font-medium text-brand-600 hover:underline">View all →</Link>}
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {outputs.slice(0, 3).map((o) => (

@@ -3,13 +3,13 @@ import { useParams } from "react-router-dom";
 import { Boxes } from "lucide-react";
 import { Badge } from "@jofrom/design-system/ui";
 import { FilterTabs } from "@jofrom/design-system/data-display";
-import { PageHeader, EmptyState, ButtonLink } from "@/components/commons/primitives";
-import { ObjectCard } from "@/components/commons/ObjectCard";
-import { deptIcon } from "@/lib/commons/navigation";
+import { PageHeader, EmptyState, ButtonLink } from "@/components/primitives";
+import { ObjectCard } from "@/components/ObjectCard";
+import { deptIcon } from "@/lib/navigation";
 import {
   departments, objectsByDept,
   type DepartmentId, type ObjectType, type WorkObject,
-} from "@/lib/commons/prototype-data";
+} from "@/lib/prototype-data";
 
 // Consistent across every department.
 const statusTabs = [
@@ -92,7 +92,7 @@ export function DepartmentPage() {
           activeTab={status}
           onChange={setStatus}
         />
-        <ButtonLink to="/commons/orgchart" variant="ghost" size="sm">View in OrgChart</ButtonLink>
+        <ButtonLink to="/orgchart" variant="ghost" size="sm">View in OrgChart</ButtonLink>
       </div>
 
       {/* Department-specific category tabs (only where defined). */}

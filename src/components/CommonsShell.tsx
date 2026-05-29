@@ -1,20 +1,20 @@
 import * as React from "react";
 import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
 import { Search, Bell, PanelLeftClose, PanelLeft, Sparkles, Menu, Sun, Moon } from "lucide-react";
-import { useTheme } from "@/lib/commons/theme";
-import { navGroups } from "@/lib/commons/navigation";
+import { useTheme } from "@/lib/theme";
+import { navGroups } from "@/lib/navigation";
 import { Input } from "@jofrom/design-system/form";
 import { Button } from "@jofrom/design-system/ui";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@jofrom/design-system/ui";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { useCommons } from "@/lib/commons/store";
-import { objectById, departments } from "@/lib/commons/prototype-data";
+import { useCommons } from "@/lib/store";
+import { objectById, departments } from "@/lib/prototype-data";
 
 function Logo({ compact }: { compact?: boolean }) {
   return (
-    <Link to="/commons" className="flex items-center gap-2 px-2 py-1">
+    <Link to="/home" className="flex items-center gap-2 px-2 py-1">
       <span className="grid size-7 shrink-0 place-items-center rounded-md bg-gradient-to-br from-primary to-[#9333ea] text-white">
         <Sparkles className="size-4" />
       </span>
@@ -42,12 +42,12 @@ function NavList({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
           <ul className="space-y-0.5">
             {group.items.map((item) => {
               const Icon = item.icon;
-              const badge = item.to === "/commons/inbox" && pendingInbox > 0 ? pendingInbox : null;
+              const badge = item.to === "/inbox" && pendingInbox > 0 ? pendingInbox : null;
               return (
                 <li key={item.to}>
                   <NavLink
                     to={item.to}
-                    end={item.to === "/commons"}
+                    end={item.to === "/home"}
                     onClick={onNavigate}
                     title={collapsed ? item.label : undefined}
                     className={({ isActive }) =>
@@ -96,7 +96,7 @@ function Sidebar({ collapsed }: { collapsed: boolean }) {
 }
 
 const crumbLabels: Record<string, string> = {
-  commons: "The Commons", inbox: "Inbox", queue: "Queue", recent: "Recent",
+  home: "Home", inbox: "Inbox", queue: "Queue", recent: "Recent",
   objects: "Objects", departments: "Departments", settings: "Settings",
   orgchart: "Maestro OrgChart", detail: "Object", tools: "Tools",
   security: "Security & Access", billing: "Billing", onboarding: "Onboarding",
@@ -122,7 +122,7 @@ function TopBar({
       <Button variant="ghost" size="icon" onClick={onToggle} className="hidden h-9 w-9 md:inline-flex" aria-label="Toggle sidebar">
         {collapsed ? <PanelLeft className="size-4" /> : <PanelLeftClose className="size-4" />}
       </Button>
-      <nav aria-label="Breadcrumb" className="hidden items-center gap-1.5 text-sm text-muted-foreground sm:flex">
+      <nav aria-label="Breadcrumb" className="hidden items-center gap-1 text-sm text-muted-foreground sm:flex">
         {parts.map((p, i) => {
           const label =
             crumbLabels[p] ??
@@ -130,8 +130,8 @@ function TopBar({
             departments.find((d) => d.id === p)?.label ??
             p.charAt(0).toUpperCase() + p.slice(1);
           return (
-            <span key={i} className="flex items-center gap-1.5">
-              {i > 0 && <span className="text-muted-foreground/40">/</span>}
+            <span key={i} className="flex items-center gap-1">
+              <span className="text-muted-foreground/40">/</span>
               <span className={cn("max-w-[16rem] truncate", i === parts.length - 1 && "font-medium text-foreground")}>
                 {label}
               </span>

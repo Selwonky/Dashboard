@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@jofrom/design-system/ui";
 import { Separator } from "@/components/ui/separator";
-import { PageHeader } from "@/components/commons/primitives";
-import { StatusBadge } from "@/components/commons/StatusBadge";
-import { deptLabel } from "@/lib/commons/prototype-data";
-import { useCommons } from "@/lib/commons/store";
+import { PageHeader } from "@/components/primitives";
+import { StatusBadge } from "@/components/StatusBadge";
+import { deptLabel } from "@/lib/prototype-data";
+import { useCommons } from "@/lib/store";
 
 export function RecentPage() {
   const { recent } = useCommons();
