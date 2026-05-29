@@ -74,7 +74,7 @@ function NavList({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
   );
 }
 
-function Sidebar({ collapsed }: { collapsed: boolean }) {
+function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   return (
     <aside
       className={cn(
@@ -86,11 +86,23 @@ function Sidebar({ collapsed }: { collapsed: boolean }) {
         <Logo compact={collapsed} />
       </div>
       <NavList collapsed={collapsed} />
-      {!collapsed && (
-        <div className="border-t border-sidebar-border p-3 text-[11px] text-sidebar-foreground/40">
-          Prototype · fixture data
-        </div>
-      )}
+      <div className={cn(
+        "flex items-center gap-2 border-t border-sidebar-border p-2",
+        collapsed ? "justify-center" : "justify-between px-3"
+      )}>
+        {!collapsed && (
+          <span className="truncate text-[11px] text-sidebar-foreground/40">Prototype · fixture data</span>
+        )}
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
+        >
+          {collapsed ? <PanelLeft className="size-4" /> : <PanelLeftClose className="size-4" />}
+        </button>
+      </div>
     </aside>
   );
 }
@@ -102,15 +114,7 @@ const crumbLabels: Record<string, string> = {
   security: "Security & Access", billing: "Billing", onboarding: "Onboarding",
 };
 
-function TopBar({
-  onToggle,
-  collapsed,
-  onOpenMobile,
-}: {
-  onToggle: () => void;
-  collapsed: boolean;
-  onOpenMobile: () => void;
-}) {
+function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
   const { pathname } = useLocation();
   const { theme, toggle } = useTheme();
   const parts = pathname.split("/").filter(Boolean);
@@ -118,9 +122,6 @@ function TopBar({
     <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur">
       <Button variant="ghost" size="icon" onClick={onOpenMobile} className="h-9 w-9 md:hidden" aria-label="Open menu">
         <Menu className="size-4" />
-      </Button>
-      <Button variant="ghost" size="icon" onClick={onToggle} className="hidden h-9 w-9 md:inline-flex" aria-label="Toggle sidebar">
-        {collapsed ? <PanelLeft className="size-4" /> : <PanelLeftClose className="size-4" />}
       </Button>
       <nav aria-label="Breadcrumb" className="hidden items-center gap-1 text-sm text-muted-foreground sm:flex">
         {parts.map((p, i) => {
@@ -168,7 +169,7 @@ export function CommonsShell() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   return (
     <div className="flex h-screen overflow-hidden bg-background text-foreground">
-      <Sidebar collapsed={collapsed} />
+      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
 
       {/* Mobile drawer */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -182,7 +183,7 @@ export function CommonsShell() {
       </Sheet>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar onToggle={() => setCollapsed((c) => !c)} collapsed={collapsed} onOpenMobile={() => setMobileOpen(true)} />
+        <TopBar onOpenMobile={() => setMobileOpen(true)} />
         <main className="flex-1 overflow-y-auto overflow-x-hidden">
           <div className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-8">
             <Outlet />
