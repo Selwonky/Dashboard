@@ -151,24 +151,32 @@ function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
       <Divider />
 
       {/* Consistent global tools: Email · Calendar · Tasks · Notes.
-          Wide: words only. Narrow: icons only. */}
+          Wide: words only. Narrow: icons only. Active route is highlighted. */}
       <div className="hidden items-center gap-1 md:flex">
-        <Button variant="ghost" size="sm" aria-label="Email" title="Email">
-          <Mail className="size-4 lg:hidden" />
-          <span className="hidden lg:inline">Email</span>
-        </Button>
-        <Button variant="ghost" size="sm" aria-label="Calendar" title="Calendar">
-          <Calendar className="size-4 lg:hidden" />
-          <span className="hidden lg:inline">Calendar</span>
-        </Button>
-        <Button variant="ghost" size="sm" aria-label="Tasks" title="Tasks">
-          <ListChecks className="size-4 lg:hidden" />
-          <span className="hidden lg:inline">Tasks</span>
-        </Button>
-        <Button variant="ghost" size="sm" aria-label="Notes" title="Notes">
-          <StickyNote className="size-4 lg:hidden" />
-          <span className="hidden lg:inline">Notes</span>
-        </Button>
+        {[
+          { to: "/email", label: "Email", Icon: Mail },
+          { to: "/calendar", label: "Calendar", Icon: Calendar },
+          { to: "/tasks", label: "Tasks", Icon: ListChecks },
+          { to: "/notes", label: "Notes", Icon: StickyNote },
+        ].map(({ to, label, Icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            aria-label={label}
+            title={label}
+            className={({ isActive }) =>
+              cn(
+                "flex h-9 items-center gap-2 rounded-md px-3 text-sm transition-colors",
+                isActive
+                  ? "bg-accent font-medium text-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+              )
+            }
+          >
+            <Icon className="size-4 lg:hidden" />
+            <span className="hidden lg:inline">{label}</span>
+          </NavLink>
+        ))}
       </div>
 
       {/* Divider + the 6 dept-specific tabs (when on a department page). */}
