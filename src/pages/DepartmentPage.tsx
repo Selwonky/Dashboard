@@ -33,7 +33,7 @@ const deptCategories: Partial<Record<DepartmentId, Category[]>> = {
   ],
   marketing: [
     { value: "content", label: "Content", types: ["content_draft"] },
-    { value: "calendar", label: "Calendar" },
+    { value: "analytics", label: "Analytics" },
     { value: "campaigns", label: "Campaigns", types: ["campaign"] },
     { value: "seo", label: "SEO/AEO" },
     { value: "performance", label: "Performance" },
@@ -79,6 +79,22 @@ const deptCategories: Partial<Record<DepartmentId, Category[]>> = {
     { value: "signatures", label: "Signatures" },
     reporting,
   ],
+  support: [
+    { value: "tickets", label: "Tickets" },
+    { value: "customers", label: "Customers" },
+    { value: "issues", label: "Issues" },
+    { value: "knowledge", label: "Knowledge Base" },
+    { value: "slas", label: "SLAs" },
+    reporting,
+  ],
+  accounting: [
+    { value: "ledger", label: "Ledger" },
+    { value: "reconciliation", label: "Reconciliation" },
+    { value: "close", label: "Period Close" },
+    { value: "expenses", label: "Expenses" },
+    { value: "tax", label: "Tax" },
+    reporting,
+  ],
 };
 
 export function DepartmentPage() {
@@ -97,19 +113,6 @@ export function DepartmentPage() {
 
   if (!meta) {
     return <EmptyState icon={Boxes} title="Unknown department" description="This work area isn't part of the prototype yet." />;
-  }
-
-  if (!meta.rich || objs.length === 0) {
-    return (
-      <>
-        <PageHeader title={meta.label} description={meta.summary} />
-        <EmptyState
-          icon={deptIcon[meta.id]}
-          title="This work area is on the way."
-          description={`We're preparing the ${meta.label} workspace. Work will appear here as Jo from prepares it.`}
-        />
-      </>
-    );
   }
 
   const activeCategory = categories?.find((c) => c.value === category);
