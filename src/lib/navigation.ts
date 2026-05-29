@@ -26,17 +26,6 @@ export const navGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Objects",
-    items: [
-      { label: "Workflows", to: "/objects/workflow", icon: Workflow },
-      { label: "Signals", to: "/objects/signal", icon: Radio },
-      { label: "Jobs", to: "/objects/job", icon: Briefcase },
-      { label: "Tasks", to: "/objects/task", icon: CircleCheck },
-      { label: "Actions", to: "/objects/action", icon: Zap },
-      { label: "Blocks", to: "/objects/block", icon: Boxes },
-    ],
-  },
-  {
     label: "Departments",
     items: [
       { label: "Sales", to: "/departments/sales", icon: TrendingUp },
@@ -48,6 +37,17 @@ export const navGroups: NavGroup[] = [
       { label: "Accounting", to: "/departments/accounting", icon: Calculator },
       { label: "Operations", to: "/departments/operations", icon: Ops },
       { label: "Legal", to: "/departments/legal", icon: Scale },
+    ],
+  },
+  {
+    label: "Objects",
+    items: [
+      { label: "Workflows", to: "/objects/workflow", icon: Workflow },
+      { label: "Signals", to: "/objects/signal", icon: Radio },
+      { label: "Jobs", to: "/objects/job", icon: Briefcase },
+      { label: "Tasks", to: "/objects/task", icon: CircleCheck },
+      { label: "Actions", to: "/objects/action", icon: Zap },
+      { label: "Blocks", to: "/objects/block", icon: Boxes },
     ],
   },
   {
