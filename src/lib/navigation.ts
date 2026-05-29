@@ -53,7 +53,7 @@ export const navGroups: NavGroup[] = [
   {
     label: "Settings",
     items: [
-      { label: "Maestro OrgChart", to: "/orgchart", icon: Network },
+      { label: "OrgChart", to: "/orgchart", icon: Network },
       { label: "Security & Access", to: "/settings/security", icon: Shield },
       { label: "Tools", to: "/settings/tools", icon: Plug },
       { label: "Billing", to: "/settings/billing", icon: CreditCard },

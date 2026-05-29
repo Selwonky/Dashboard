@@ -22,7 +22,7 @@ export function HomePage() {
         description="Review approvals, track work, and see what Jo from has prepared across your company."
         actions={
           <>
-            <ButtonLink to="/orgchart" variant="outline"><Compass className="size-4" /> Maestro OrgChart</ButtonLink>
+            <ButtonLink to="/orgchart" variant="outline"><Compass className="size-4" /> OrgChart</ButtonLink>
             <ButtonLink to="/inbox"><Inbox className="size-4" /> Review Inbox{pending.length ? ` (${pending.length})` : ""}</ButtonLink>
           </>
         }

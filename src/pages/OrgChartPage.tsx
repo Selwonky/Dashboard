@@ -24,7 +24,7 @@ export function OrgChartPage() {
   return (
     <>
       <PageHeader
-        title="Maestro OrgChart"
+        title="OrgChart"
         description="How work is structured beneath you. Tasks roll up to jobs, jobs roll up to departments, and Workflow Seeds produce Compiler Records."
       />
       <div className="mb-6 flex flex-wrap items-center gap-2 rounded-lg border bg-gradient-to-r from-primary/5 to-[#9333ea]/5 px-4 py-3 text-sm">

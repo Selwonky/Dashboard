@@ -110,7 +110,7 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
 const crumbLabels: Record<string, string> = {
   home: "Home", inbox: "Inbox", queue: "Queue", recent: "Recent",
   objects: "Objects", departments: "Departments", settings: "Settings",
-  orgchart: "Maestro OrgChart", detail: "Object", tools: "Tools",
+  orgchart: "OrgChart", detail: "Object", tools: "Tools",
   security: "Security & Access", billing: "Billing", onboarding: "Onboarding",
 };
 
