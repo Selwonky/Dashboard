@@ -123,23 +123,22 @@ function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
       <Button variant="ghost" size="icon" onClick={onOpenMobile} className="h-9 w-9 md:hidden" aria-label="Open menu">
         <Menu className="size-4" />
       </Button>
-      <nav aria-label="Breadcrumb" className="hidden items-center gap-1 text-sm text-muted-foreground sm:flex">
-        {parts.map((p, i) => {
-          const label =
-            crumbLabels[p] ??
-            objectById(p)?.title ??
-            departments.find((d) => d.id === p)?.label ??
-            p.charAt(0).toUpperCase() + p.slice(1);
-          return (
-            <span key={i} className="flex items-center gap-1">
-              <span className="text-muted-foreground/40">/</span>
-              <span className={cn("max-w-[16rem] truncate", i === parts.length - 1 && "font-medium text-foreground")}>
-                {label}
-              </span>
-            </span>
-          );
-        })}
-      </nav>
+      {(() => {
+        // Show just the leaf page — `/ <Page>` — not the full nested path.
+        const leaf = parts[parts.length - 1];
+        if (!leaf) return null;
+        const label =
+          crumbLabels[leaf] ??
+          objectById(leaf)?.title ??
+          departments.find((d) => d.id === leaf)?.label ??
+          leaf.charAt(0).toUpperCase() + leaf.slice(1);
+        return (
+          <nav aria-label="Breadcrumb" className="hidden items-center gap-1 text-sm text-muted-foreground sm:flex">
+            <span className="text-muted-foreground/40">/</span>
+            <span className="max-w-[16rem] truncate font-medium text-foreground">{label}</span>
+          </nav>
+        );
+      })()}
       <div className="relative ml-auto hidden w-64 md:block">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input placeholder="Search work…" className="h-9 pl-8" />
