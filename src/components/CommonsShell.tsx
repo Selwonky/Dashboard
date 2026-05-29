@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
-import { Search, Bell, PanelLeftClose, PanelLeft, Sparkles, Menu, Sun, Moon } from "lucide-react";
+import { Search, Bell, PanelLeftClose, PanelLeft, Sparkles, Menu, Sun, Moon, Mail, Calendar, ListChecks, StickyNote } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import { navGroups } from "@/lib/navigation";
 import { Input } from "@jofrom/design-system/form";
@@ -139,6 +139,23 @@ function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
           </nav>
         );
       })()}
+
+      {/* Consistent global tools: Email · Calendar · Tasks · Notes. */}
+      <div className="ml-2 hidden items-center gap-1 md:flex">
+        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Email" title="Email">
+          <Mail className="size-4" />
+        </Button>
+        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Calendar" title="Calendar">
+          <Calendar className="size-4" />
+        </Button>
+        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Tasks" title="Tasks">
+          <ListChecks className="size-4" />
+        </Button>
+        <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Notes" title="Notes">
+          <StickyNote className="size-4" />
+        </Button>
+      </div>
+
       <div className="relative ml-auto hidden w-64 md:block">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input placeholder="Search work…" className="h-9 pl-8" />
