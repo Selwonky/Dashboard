@@ -140,26 +140,6 @@ function TopBar({ onOpenMobile }: { onOpenMobile: () => void }) {
         );
       })()}
 
-      {/* Consistent global tools: Email · Calendar · Tasks · Notes.
-          Wide: words only. Narrow: icons only. Never both. */}
-      <div className="ml-2 hidden items-center gap-1 md:flex">
-        <Button variant="ghost" size="sm" aria-label="Email" title="Email">
-          <Mail className="size-4 lg:hidden" />
-          <span className="hidden lg:inline">Email</span>
-        </Button>
-        <Button variant="ghost" size="sm" aria-label="Calendar" title="Calendar">
-          <Calendar className="size-4 lg:hidden" />
-          <span className="hidden lg:inline">Calendar</span>
-        </Button>
-        <Button variant="ghost" size="sm" aria-label="Tasks" title="Tasks">
-          <ListChecks className="size-4 lg:hidden" />
-          <span className="hidden lg:inline">Tasks</span>
-        </Button>
-        <Button variant="ghost" size="sm" aria-label="Notes" title="Notes">
-          <StickyNote className="size-4 lg:hidden" />
-          <span className="hidden lg:inline">Notes</span>
-        </Button>
-      </div>
 
       <div className="relative ml-auto hidden w-64 md:block">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
