@@ -62,3 +62,28 @@
 /* --info is not in the DS token set; add it (sky blue) for status badges. */
 :root { --info: 199 89% 48%; }
 .dark { --info: 199 89% 48%; }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Lavender surface scale (project decision). The page and the side nav are
+   both lavender; only the lightness changes. Ordered lightest → darkest:
+       L-P  (light mode · page)        — lightest lavender
+       L-SN (light mode · side nav)    — slightly darker
+       D-P  (dark mode  · page)        — dark lavender
+       D-SN (dark mode  · side nav)    — darkest lavender
+   ────────────────────────────────────────────────────────────────────────── */
+:root {
+  --background:                  270 33% 98%;   /* L-P  */
+  --sidebar:                     270 30% 92%;   /* L-SN */
+  --sidebar-active:              270 50% 85%;
+  --sidebar-active-foreground:   260 60% 25%;
+  --sidebar-foreground:          260 25% 22%;
+  --sidebar-border:              270 25% 86%;
+}
+.dark {
+  --background:                  270 25% 12%;   /* D-P  */
+  --sidebar:                     270 35% 6%;    /* D-SN */
+  --sidebar-active:              270 40% 16%;
+  --sidebar-active-foreground:   270 95% 82%;
+  --sidebar-foreground:          270 30% 92%;
+  --sidebar-border:              270 25% 18%;
+}
