@@ -85,7 +85,7 @@ export const deptCategories: Partial<Record<DepartmentId, DeptCategory[]>> = {
     { value: "content", label: "Content", types: ["content_draft"] },
     { value: "analytics", label: "Analytics" },
     { value: "campaigns", label: "Campaigns", types: ["campaign"] },
-    { value: "seo", label: "SEO/AEO" },
+    { value: "eo", label: "EO" },
     { value: "performance", label: "Performance" },
     reporting,
   ],
