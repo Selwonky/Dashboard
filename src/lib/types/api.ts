@@ -6,12 +6,39 @@ export type ApiSuccess<T> = {
   message?: string;
 };
 
+export type ApiListSuccess<T> = {
+  status: "success";
+  data: T[];
+  count: number;
+  limit: number;
+  offset: number;
+};
+
+export type ApiCreateSuccess<T> = {
+  status: "success";
+  id: number;
+  data: T;
+};
+
+export type ApiDeleteSuccess = {
+  status: "success";
+  deleted: true;
+  id: number;
+};
+
+export type ApiUnavailable = {
+  status: "unavailable";
+  model: string;
+  data: [];
+  error: string;
+};
+
 export type ApiError = {
   status: "error";
   detail: string;
 };
 
-export type ApiEnvelope<T> = ApiSuccess<T> | ApiError;
+export type ApiEnvelope<T> = ApiSuccess<T> | ApiListSuccess<T> | ApiError | ApiUnavailable;
 
 export type ContractStatus = "live" | "pending";
 export type DataSource = "api" | "prototype";

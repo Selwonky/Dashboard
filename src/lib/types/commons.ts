@@ -5,7 +5,7 @@ export type InboxStatus = "pending" | "processing" | "approved" | "rejected" | "
 export type StatusKind = "neutral" | "in_progress" | "scheduled" | "attention" | "failed" | "done";
 
 export interface WorkObject {
-  id: string;
+  id: string | number;
   type: string;
   typeLabel: string;
   title: string;
@@ -23,7 +23,7 @@ export interface WorkObject {
 }
 
 export interface InboxItem {
-  id: string;
+  id: string | number;
   department: string;
   title: string;
   objectTitle: string;
@@ -33,10 +33,12 @@ export interface InboxItem {
   statusKind: StatusKind;
   statusLabel: string;
   preview: string;
+  owner?: string;
+  nextAction?: string;
 }
 
 export interface QueueAction {
-  id: string;
+  id: string | number;
   title: string;
   department: string;
   status: string;
@@ -47,7 +49,7 @@ export interface QueueAction {
 }
 
 export interface OutputRecord {
-  id: string;
+  id: string | number;
   title: string;
   type: string;
   department: string;
@@ -61,12 +63,51 @@ export interface OutputRecord {
 }
 
 export interface ToolConn {
-  id: string;
+  id: string | number;
   label: string;
   status: "connected" | "not_connected" | "backend";
   note: string;
   why: string;
   lastSynced?: string;
+}
+
+export interface CalendarEvent {
+  id: number;
+  name: string;
+  start: string;
+  stop: string;
+  allday?: boolean;
+  description?: string;
+  department?: string;
+}
+
+export interface MailMessage {
+  id: number;
+  subject?: string;
+  body: string;
+  author?: string;
+  date: string;
+  model?: string;
+  res_id?: number;
+}
+
+export interface TaskItem {
+  id: number;
+  name: string;
+  date_deadline?: string;
+  state?: string;
+  user_id?: number;
+  project_id?: number;
+  department?: string;
+}
+
+export interface NoteItem {
+  id: number;
+  name: string;
+  body?: string;
+  date?: string;
+  model?: string;
+  res_id?: number;
 }
 
 export interface SurfaceMeta {

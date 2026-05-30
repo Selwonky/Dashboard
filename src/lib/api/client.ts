@@ -1,9 +1,9 @@
-import type { ApiSuccess, ApiError } from "@/lib/types/api";
+import type { ApiSuccess, ApiListSuccess, ApiCreateSuccess, ApiDeleteSuccess, ApiUnavailable, ApiError } from "@/lib/types/api";
 import { getAccessToken } from "./auth";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
-class ApiClientError extends Error {
+export class ApiClientError extends Error {
   status: number;
   detail: string;
   constructor(status: number, detail: string) {
@@ -14,11 +14,20 @@ class ApiClientError extends Error {
   }
 }
 
+export class ModelUnavailableError extends Error {
+  model: string;
+  constructor(model: string, message: string) {
+    super(message);
+    this.name = "ModelUnavailableError";
+    this.model = model;
+  }
+}
+
 async function request<T>(
   method: string,
   path: string,
   body?: unknown,
-): Promise<ApiSuccess<T>> {
+): Promise<T> {
   const url = `${BASE_URL}${path}`;
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -47,23 +56,36 @@ async function request<T>(
     throw new ApiClientError(res.status, detail);
   }
 
-  return res.json() as Promise<ApiSuccess<T>>;
+  const json = await res.json();
+
+  if (json.status === "unavailable") {
+    const u = json as ApiUnavailable;
+    throw new ModelUnavailableError(u.model, u.error);
+  }
+
+  return json as T;
 }
 
 export async function apiGet<T>(path: string): Promise<ApiSuccess<T>> {
-  return request<T>("GET", path);
+  return request<ApiSuccess<T>>("GET", path);
+}
+
+export async function apiGetList<T>(path: string): Promise<ApiListSuccess<T>> {
+  return request<ApiListSuccess<T>>("GET", path);
 }
 
 export async function apiPost<T>(path: string, body?: unknown): Promise<ApiSuccess<T>> {
-  return request<T>("POST", path, body);
+  return request<ApiSuccess<T>>("POST", path, body);
+}
+
+export async function apiCreate<T>(path: string, body?: unknown): Promise<ApiCreateSuccess<T>> {
+  return request<ApiCreateSuccess<T>>("POST", path, body);
 }
 
 export async function apiPut<T>(path: string, body?: unknown): Promise<ApiSuccess<T>> {
-  return request<T>("PUT", path, body);
+  return request<ApiSuccess<T>>("PUT", path, body);
 }
 
-export async function apiDelete<T>(path: string): Promise<ApiSuccess<T>> {
-  return request<T>("DELETE", path);
+export async function apiDelete(path: string): Promise<ApiDeleteSuccess> {
+  return request<ApiDeleteSuccess>("DELETE", path);
 }
-
-export { ApiClientError };
