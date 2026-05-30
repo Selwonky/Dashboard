@@ -1,14 +1,22 @@
 import {
   LayoutGrid, Inbox, Activity, History, Workflow, Radio, Briefcase, CircleCheck,
   Zap, Boxes, Megaphone, Users, Wallet, Server, LifeBuoy, Calculator, Workflow as Ops,
-  Scale, Shield, Plug, CreditCard, Compass, TrendingUp, Network, type LucideIcon,
+  Scale, Shield, Plug, CreditCard, Compass, TrendingUp, Network, FlaskConical,
+  type LucideIcon,
 } from "lucide-react";
 import type { DepartmentId, ObjectType } from "./prototype-data";
+
+export interface DeptCategory {
+  value: string;
+  label: string;
+  types?: ObjectType[];
+}
 
 export interface NavLink {
   label: string;
   to: string;
   icon: LucideIcon;
+  children?: NavLink[];
 }
 export interface NavGroup {
   label: string;
@@ -53,96 +61,68 @@ export const navGroups: NavGroup[] = [
   {
     label: "Settings",
     items: [
-      { label: "OrgChart", to: "/orgchart", icon: Network },
-      { label: "Security & Access", to: "/settings/security", icon: Shield },
-      { label: "Tools", to: "/settings/tools", icon: Plug },
-      { label: "Billing", to: "/settings/billing", icon: CreditCard },
-      { label: "Onboarding", to: "/settings/onboarding", icon: Compass },
+      { label: "Maestro OrgChart", to: "/orgchart", icon: Network },
+      {
+        label: "Admin / Security & Access",
+        to: "/settings/security",
+        icon: Shield,
+        children: [
+          { label: "Tools", to: "/settings/tools", icon: Plug },
+          { label: "Billing", to: "/settings/billing", icon: CreditCard },
+          { label: "Onboarding", to: "/settings/onboarding", icon: Compass },
+          { label: "Prototype · fixture data", to: "/settings/prototype", icon: FlaskConical },
+        ],
+      },
     ],
   },
 ];
+
+export const deptCategories: Record<DepartmentId, DeptCategory[]> = {
+  sales: [
+    { value: "all", label: "All" },
+    { value: "pipeline", label: "Pipeline", types: ["prospect", "research_brief", "outreach_draft", "proposal", "status_report"] },
+    { value: "partnerships", label: "Partnerships", types: ["partner", "referral", "checkin"] },
+    { value: "risk", label: "Risk", types: ["insurance_prospect", "quote_package", "assessment", "licensing"] },
+  ],
+  operations: [
+    { value: "all", label: "All" },
+    { value: "delivery", label: "Delivery", types: ["engagement", "checklist", "status_report"] },
+  ],
+  marketing: [
+    { value: "all", label: "All" },
+    { value: "content", label: "Content", types: ["content_draft"] },
+    { value: "campaigns", label: "Campaigns", types: ["campaign"] },
+  ],
+  finance: [
+    { value: "all", label: "All" },
+    { value: "billing", label: "Billing", types: ["invoice"] },
+    { value: "reporting", label: "Reporting", types: ["status_report"] },
+  ],
+  workforce: [
+    { value: "all", label: "All" },
+    { value: "agreements", label: "Agreements", types: ["agreement"] },
+    { value: "onboarding", label: "Onboarding", types: ["checklist"] },
+  ],
+  technology: [
+    { value: "all", label: "All" },
+    { value: "sprints", label: "Sprints", types: ["sprint"] },
+    { value: "deploy", label: "Deployments", types: ["ticket"] },
+    { value: "health", label: "Health", types: ["status_report"] },
+  ],
+  legal: [
+    { value: "all", label: "All" },
+    { value: "contracts", label: "Contracts", types: ["contract"] },
+  ],
+  support: [
+    { value: "all", label: "All" },
+  ],
+  accounting: [
+    { value: "all", label: "All" },
+  ],
+};
 
 export const deptIcon: Record<DepartmentId, LucideIcon> = {
   sales: TrendingUp, marketing: Megaphone, workforce: Users, finance: Wallet,
   technology: Server, support: LifeBuoy, accounting: Calculator, operations: Ops,
   legal: Scale,
-};
-
-// Dept-specific category tabs — rendered in the topbar header next to the
-// page indicator. 5 specific + the shared "Reporting" tab.
-export type DeptCategory = { value: string; label: string; types?: ObjectType[] };
-const reporting: DeptCategory = { value: "reporting", label: "Reporting", types: ["status_report"] };
-export const deptCategories: Partial<Record<DepartmentId, DeptCategory[]>> = {
-  sales: [
-    { value: "pipeline", label: "Pipeline", types: ["prospect", "research_brief"] },
-    { value: "outreach", label: "Outreach", types: ["outreach_draft", "proposal"] },
-    { value: "partnerships", label: "Partnerships", types: ["partner", "referral", "checkin"] },
-    { value: "risk", label: "Risk", types: ["insurance_prospect", "quote_package", "assessment", "licensing"] },
-    { value: "forecast", label: "Forecast" },
-    reporting,
-  ],
-  marketing: [
-    { value: "content", label: "Content", types: ["content_draft"] },
-    { value: "analytics", label: "Analytics" },
-    { value: "campaigns", label: "Campaigns", types: ["campaign"] },
-    { value: "eo", label: "EO" },
-    { value: "performance", label: "Performance" },
-    reporting,
-  ],
-  operations: [
-    { value: "engagements", label: "Engagements", types: ["engagement"] },
-    { value: "onboarding", label: "Onboarding", types: ["checklist"] },
-    { value: "deliverables", label: "Deliverables" },
-    { value: "escalations", label: "Escalations" },
-    { value: "health", label: "Health" },
-    reporting,
-  ],
-  finance: [
-    { value: "invoices", label: "Invoices", types: ["invoice"] },
-    { value: "cashflow", label: "Cash Flow" },
-    { value: "collections", label: "Collections" },
-    { value: "grants", label: "Grants" },
-    { value: "budgets", label: "Budgets" },
-    reporting,
-  ],
-  workforce: [
-    { value: "people", label: "People" },
-    { value: "contractors", label: "Contractors", types: ["agreement"] },
-    { value: "onboarding", label: "Onboarding", types: ["checklist"] },
-    { value: "agreements", label: "Agreements", types: ["agreement"] },
-    { value: "payments", label: "Payments" },
-    reporting,
-  ],
-  technology: [
-    { value: "sprints", label: "Sprints", types: ["sprint"] },
-    { value: "tickets", label: "Tickets", types: ["ticket"] },
-    { value: "deployments", label: "Deployments" },
-    { value: "health", label: "Tool Health" },
-    { value: "roadmap", label: "Roadmap" },
-    reporting,
-  ],
-  legal: [
-    { value: "contracts", label: "Contracts", types: ["contract"] },
-    { value: "filings", label: "Filings" },
-    { value: "ip", label: "IP" },
-    { value: "compliance", label: "Compliance" },
-    { value: "signatures", label: "Signatures" },
-    reporting,
-  ],
-  support: [
-    { value: "tickets", label: "Tickets" },
-    { value: "customers", label: "Customers" },
-    { value: "issues", label: "Issues" },
-    { value: "knowledge", label: "Knowledge Base" },
-    { value: "slas", label: "SLAs" },
-    reporting,
-  ],
-  accounting: [
-    { value: "ledger", label: "Ledger" },
-    { value: "reconciliation", label: "Reconciliation" },
-    { value: "close", label: "Period Close" },
-    { value: "expenses", label: "Expenses" },
-    { value: "tax", label: "Tax" },
-    reporting,
-  ],
 };

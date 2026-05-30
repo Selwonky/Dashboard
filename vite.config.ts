@@ -5,7 +5,7 @@ import path from 'node:path'
 import os from 'node:os'
 
 // Local canonical design system (consumed from source — kept local, not published).
-const DS = path.resolve(os.homedir(), 'Jo_Design_System/src')
+const DS = path.resolve(os.homedir(), 'jofrom-design-system/src')
 const nm = (m: string) => path.resolve(__dirname, 'node_modules', m)
 
 // DS subpath exports → DS source entrypoints.

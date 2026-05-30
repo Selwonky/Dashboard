@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
-import { Search, Bell, PanelLeftClose, PanelLeft, Sparkles, Menu, Sun, Moon, Mail, Calendar, ListChecks, StickyNote } from "lucide-react";
+import { Search, Bell, PanelLeftClose, PanelLeft, Menu, Sun, Moon, Mail, Calendar, ListChecks, StickyNote } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import { navGroups, deptCategories } from "@/lib/navigation";
 import type { DepartmentId } from "@/lib/prototype-data";
@@ -17,12 +17,12 @@ import { objectById, departments } from "@/lib/prototype-data";
 function Logo({ compact }: { compact?: boolean }) {
   return (
     <Link to="/home" className="flex items-center gap-2 px-2 py-1">
-      <span className="grid size-7 shrink-0 place-items-center rounded-md bg-gradient-to-br from-primary to-[#9333ea] text-white">
-        <Sparkles className="size-4" />
+      <span className="grid size-7 shrink-0 place-items-center rounded-md bg-brand-600">
+        <img src="/qubit.png" alt="" className="size-5" />
       </span>
       {!compact && (
-        <span className="text-sm font-semibold tracking-tight text-sidebar-foreground">
-          Jo from <span className="font-normal text-sidebar-foreground/60">· The Commons</span>
+        <span className="text-sm font-semibold tracking-tight text-foreground">
+          The Commons
         </span>
       )}
     </Link>
