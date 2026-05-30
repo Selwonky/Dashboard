@@ -127,6 +127,10 @@ Not in git. Two transcripts + the persistent memory files live in:
 ```
 A tarball is on the Desktop: `~/Desktop/jofrom-claude-session.tar.gz` (10 MB). On the new Mac, unzip into `~/.claude/projects/`, rename the inner folder if the new home is at a different username, then `claude --resume` from `~/Dashboard` to pick up this session.
 
+## Design rules
+
+1. **Contrast.** Dark surface → light text. Light surface → dark text. Always pair semantic background/foreground tokens that auto-flip with theme; never pair `bg-X` with a hardcoded text colour. Approved pairs and details: see the comment block at the top of `src/styles.css`.
+
 ## Promotion rule (per v4 spec)
 
 ```

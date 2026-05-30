@@ -1,5 +1,15 @@
 /* Commons prototype style entry — consumes the canonical @jofrom/design-system
-   tokens from the local clone (~/Jo_Design_System). Single Tailwind v4 entry. */
+   tokens from the local clone (~/Jo_Design_System). Single Tailwind v4 entry.
+   --------------------------------------------------------------------------
+   Contrast rule (always): if the button/surface is dark, the text is light;
+   if it's light, the text is dark. Use semantic pairs that auto-flip with
+   theme — never pair `bg-X` with a static text colour. Acceptable pairs:
+     bg-brand-600           + text-white
+     bg-gray-100            + text-gray-900
+     bg-accent              + text-foreground
+     bg-sidebar-accent      + text-sidebar-foreground
+     bg-brand-50            + text-brand-600   (and analogous success/warning/error)
+   -------------------------------------------------------------------------- */
 @import "tailwindcss";
 
 /* Design-system foundation: TailAdmin @theme scales + semantic HSL tokens
