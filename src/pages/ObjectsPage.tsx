@@ -49,7 +49,7 @@ export function ObjectsPage() {
                   timestamp={o.dueAt}
                   metadata={<span className="text-theme-xs text-gray-500 dark:text-gray-400">{deptLabel(o.department)}</span>}
                   assignee={getInitials(o.owner.replace("Jo from ", ""))}
-                  onClick={() => navigate(`/commons/objects/detail/${o.id}`)}
+                  onClick={() => navigate(`/objects/detail/${o.id}`)}
                 />
               ))}
             </KanbanColumn>

@@ -38,7 +38,7 @@ export function RecentPage() {
             <CardFooter className="justify-between">
               <StatusBadge kind={o.statusKind} label={o.statusLabel} />
               {o.sourceObjectId && (
-                <Link to={`/commons/objects/detail/${o.sourceObjectId}`} className="text-sm font-medium text-primary hover:underline">
+                <Link to={`/objects/detail/${o.sourceObjectId}`} className="text-sm font-medium text-primary hover:underline">
                   Open object →
                 </Link>
               )}

@@ -74,7 +74,7 @@ export function ObjectCard({ obj }: { obj: WorkObject }) {
           <span className="shrink-0 text-gray-300 dark:text-gray-600">·</span>
           <span className="shrink-0">{deptLabel(obj.department)}</span>
         </div>
-        <ButtonLink to={`/commons/objects/detail/${obj.id}`} variant="link" size="sm" className="shrink-0">
+        <ButtonLink to={`/objects/detail/${obj.id}`} variant="link" size="sm" className="shrink-0">
           Open →
         </ButtonLink>
       </CardFooter>
